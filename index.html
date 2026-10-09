@@ -72,7 +72,15 @@ button, input, select, textarea { font: inherit; color: inherit; }
 :focus-visible { outline: 3px solid var(--pitch); outline-offset: 2px; }
 
 .masthead { display: flex; flex-direction: column; gap: 10px; border-bottom: 3px solid var(--ink); padding-bottom: 18px; }
+.topline { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
 .eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--ink-soft); }
+.lang { display: inline-flex; border: 2px solid var(--ink); border-radius: 2px; overflow: hidden; }
+.lang button {
+  background: var(--card); border: 0; padding: 6px 14px; min-height: 36px; cursor: pointer;
+  font-family: var(--font-display); font-weight: 800; font-size: 18px; letter-spacing: .06em;
+}
+.lang button + button { border-left: 2px solid var(--ink); }
+.lang button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
 h1 {
   font-family: var(--font-display); font-weight: 900; text-transform: uppercase;
   font-size: clamp(56px, 13vw, 124px); line-height: .86; margin: 0; letter-spacing: -.01em;
@@ -86,6 +94,7 @@ h1 {
 .field label, .label {
   font-size: 12px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: var(--ink-soft);
 }
+.opt { text-transform: none; letter-spacing: 0; font-weight: 500; }
 select, input[type="text"], textarea {
   width: 100%; background: var(--card); border: 2px solid var(--ink); border-radius: 2px; padding: 11px 12px; min-height: 46px;
 }
@@ -167,19 +176,25 @@ input[type="range"] { width: 100%; accent-color: var(--pitch); height: 32px; mar
 <body>
 <div class="wrap">
   <header class="masthead">
-    <div class="eyebrow">CPHI Milano · Fine partita</div>
-    <h1>Le pagelle</h1>
-    <p class="lede">L'evento è finito, ora si danno i voti. Scegli un collega, dagli un voto e racconta come ha giocato.</p>
+    <div class="topline">
+      <div class="eyebrow" data-i18n="eyebrow"></div>
+      <div class="lang" role="group" aria-label="Lingua / Language">
+        <button type="button" data-lang="it" aria-pressed="true">IT</button>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
+    </div>
+    <h1 data-i18n="title"></h1>
+    <p class="lede" data-i18n="lede"></p>
   </header>
 
-  <section class="bar" aria-label="Il tuo profilo e i progressi">
+  <section class="bar">
     <div class="field">
-      <label for="me">Chi sei?</label>
+      <label for="me" data-i18n="whoami"></label>
       <select id="me"></select>
     </div>
     <div class="progress">
       <div class="progress-row">
-        <div class="progress-count" aria-live="polite"><b id="doneN">0</b><span> / 5 colleghi</span></div>
+        <div class="progress-count" aria-live="polite"><b id="doneN">0</b><span data-i18n="of5"></span></div>
         <div class="progress-msg" id="progressMsg"></div>
       </div>
       <div class="pips" id="pips" aria-hidden="true"></div>
@@ -188,52 +203,53 @@ input[type="range"] { width: 100%; accent-color: var(--pitch); height: 32px; mar
 
   <div class="main">
     <section aria-labelledby="rosterTitle">
-      <h2 class="section-title" id="rosterTitle">La formazione</h2>
+      <h2 class="section-title" id="rosterTitle" data-i18n="squad"></h2>
       <div class="roster" id="roster"></div>
     </section>
 
     <section class="sheet" id="sheet" aria-labelledby="sheetName">
       <div class="sheet-head">
-        <div class="label" id="sheetLabel">Pagella</div>
+        <div class="label" id="sheetLabel"></div>
         <h3 id="sheetName">Nome</h3>
       </div>
       <form class="sheet-body" id="form" novalidate>
         <div class="vote">
-          <label class="label" for="voto">Che voto si merita?</label>
+          <label class="label" for="voto" data-i18n="voteLabel"></label>
           <div class="vote-read">
             <div class="vote-num" id="voteNum">6</div>
-            <div class="vote-word" id="voteWord">Politico</div>
+            <div class="vote-word" id="voteWord"></div>
           </div>
           <input type="range" id="voto" min="6" max="10" step="0.5" value="6">
           <div class="ticks" aria-hidden="true"><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
-          <p class="hint">Qui nessuno è bocciato: si parte dal 6, che è il voto politico.</p>
+          <p class="hint" data-i18n="hint"></p>
         </div>
 
         <div class="field">
-          <label for="campo">Com'è andato in campo al CPHI?</label>
-          <textarea id="campo" maxlength="400" placeholder="Un momento memorabile, un'abitudine, il ruolo che gli hai visto ricoprire (portiere dello stand, bomber dei contatti, regista del caffè...)"></textarea>
+          <label for="campo" data-i18n="campoLabel"></label>
+          <textarea id="campo" maxlength="400" data-i18n-ph="campoPh"></textarea>
           <div class="count"><span id="campoN">0</span>/400</div>
         </div>
 
         <div class="field">
-          <label for="tallone">Il suo superpotere o tallone d'Achille? <span style="text-transform:none;letter-spacing:0;font-weight:500">(facoltativo)</span></label>
-          <input type="text" id="tallone" maxlength="100" placeholder="Anche una sola parola">
+          <label for="tallone"><span data-i18n="talloneLabel"></span> <span class="opt" data-i18n="optional"></span></label>
+          <input type="text" id="tallone" maxlength="100" data-i18n-ph="tallonePh">
         </div>
 
         <div class="actions">
-          <button type="submit" class="btn" id="save">Metti a referto</button>
+          <button type="submit" class="btn" id="save" data-i18n="save"></button>
           <div class="status" id="status" role="status" aria-live="polite"></div>
         </div>
       </form>
     </section>
   </div>
 
-  <p class="rules"><strong>Si scherza: battute affettuose, altrimenti cartellino rosso.</strong> Le valutazioni sono anonime: non viene salvato chi ha votato chi (solo l'autovoto si riconosce da sé). Compila tutte le schede che vuoi, minimo 5 colleghi.</p>
+  <p class="rules"><strong data-i18n="rules1"></strong> <span data-i18n="rules2"></span></p>
 </div>
 
 <script>
 (function () {
   // Collegamento al modulo Google (codici ricavati dal link precompilato).
+  // I valori inviati (nomi, "Sì"/"No", voti con la virgola) restano sempre in italiano, in qualsiasi lingua.
   var FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdRGNttmHAbVbkw863MB6KTTGMkFUJ-71bkwDUQPJ0H0t_jOQ/formResponse";
   var ENTRY = {
     chi: "entry.1907016002",
@@ -249,7 +265,90 @@ input[type="range"] { width: 100%; accent-color: var(--pitch); height: 32px; mar
     "Fatima Ayash", "Lucio Sanzeri", "Silvia Morganti", "Chiara Grignani", "Heather DeFilipo"
   ];
   var MIN = 5;
-  var WORDS = { 6: "Politico", 7: "Buona prova", 8: "Gran partita", 9: "Fuoriclasse", 10: "Pallone d'oro" };
+
+  var T = {
+    it: {
+      eyebrow: "CPHI Milano · Fine partita",
+      title: "Le pagelle",
+      lede: "L'evento è finito, ora si danno i voti. Scegli un collega, dagli un voto e racconta come ha giocato.",
+      whoami: "Chi sei?",
+      pickme: "Scegli il tuo nome",
+      of5: " / 5 colleghi",
+      left1: "Ne manca 1 al minimo",
+      leftN: "Ne mancano {n} al minimo",
+      reached: "Minimo raggiunto, ogni scheda in più migliora le pagelle",
+      squad: "La formazione",
+      you: "Tu",
+      tagDone: "Messo a referto",
+      tagSelf: "Autovoto",
+      tagTodo: "Da votare",
+      sheetCard: "Pagella · Maglia n° {n}",
+      sheetSelf: "Autovoto · Maglia n° {n}",
+      voteLabel: "Che voto si merita?",
+      hint: "Qui nessuno è bocciato: si parte dal 6, che è il voto politico.",
+      campoLabel: "Com'è andato in campo al CPHI?",
+      campoPh: "Un momento memorabile, un'abitudine, il ruolo che gli hai visto ricoprire (portiere dello stand, bomber dei contatti, regista del caffè...)",
+      talloneLabel: "Il suo superpotere o tallone d'Achille?",
+      optional: "(facoltativo)",
+      tallonePh: "Anche una sola parola",
+      save: "Metti a referto",
+      rules1: "Si scherza: battute affettuose, altrimenti cartellino rosso.",
+      rules2: "Le valutazioni sono anonime: non viene salvato chi ha votato chi (solo l'autovoto si riconosce da sé). Compila tutte le schede che vuoi, minimo 5 colleghi.",
+      w6: "Politico", w7: "Buona prova", w8: "Gran partita", w9: "Fuoriclasse", w10: "Pallone d'oro",
+      needName: "Prima scegli il tuo nome in alto.",
+      needCampo: "Scrivi almeno una riga su com'è andato in campo.",
+      sending: "Invio...",
+      sent: "Messo a referto: {name}",
+      sentNext: "Messo a referto: {name}. Tocca a {first}.",
+      fail: "Non sono riuscito a inviare. Controlla la connessione e riprova.",
+      already: "Hai già votato questo collega. Una nuova scheda si aggiunge alla precedente."
+    },
+    en: {
+      eyebrow: "CPHI Milan · Full time",
+      title: "Player ratings",
+      lede: "The event is over, so it's time for the marks. Pick a colleague, give them a rating and tell us how they played.",
+      whoami: "Who are you?",
+      pickme: "Choose your name",
+      of5: " / 5 colleagues",
+      left1: "1 more to reach the minimum",
+      leftN: "{n} more to reach the minimum",
+      reached: "Minimum reached — every extra card makes the ratings better",
+      squad: "The squad",
+      you: "You",
+      tagDone: "Rated",
+      tagSelf: "Self-rating",
+      tagTodo: "To rate",
+      sheetCard: "Rating card · Shirt no. {n}",
+      sheetSelf: "Self-rating · Shirt no. {n}",
+      voteLabel: "What rating do they deserve?",
+      hint: "Nobody fails here: we start at 6, the courtesy pass mark.",
+      campoLabel: "How did they play at CPHI?",
+      campoPh: "A memorable moment, a habit, the role you saw them play (stand goalkeeper, contact striker, coffee playmaker...)",
+      talloneLabel: "Their superpower or Achilles' heel?",
+      optional: "(optional)",
+      tallonePh: "Even just one word",
+      save: "Submit rating",
+      rules1: "It's all in good fun: affectionate jokes only, or it's a red card.",
+      rules2: "Ratings are anonymous: who voted for whom is not recorded (only a self-rating gives itself away). Fill in as many cards as you like, at least 5 colleagues.",
+      w6: "Pass mark", w7: "Solid showing", w8: "Great match", w9: "World class", w10: "Ballon d'Or",
+      needName: "First choose your name at the top.",
+      needCampo: "Write at least one line about how they played.",
+      sending: "Sending...",
+      sent: "Rated: {name}",
+      sentNext: "Rated: {name}. Next up: {first}.",
+      fail: "Couldn't send. Check your connection and try again.",
+      already: "You've already rated this colleague. A new card will be added to the previous one."
+    }
+  };
+
+  var lang = "it";
+  try { var sl = localStorage.getItem("pagelle-lang"); if (sl === "it" || sl === "en") lang = sl; } catch (e) {}
+
+  function t(key, vars) {
+    var s = (T[lang] && T[lang][key]) || T.it[key] || key;
+    if (vars) Object.keys(vars).forEach(function (k) { s = s.split("{" + k + "}").join(vars[k]); });
+    return s;
+  }
 
   function $(id) { return document.getElementById(id); }
   function slug(s) {
@@ -258,7 +357,7 @@ input[type="range"] { width: 100%; accent-color: var(--pitch); height: 32px; mar
   // Mostrato nella pagina: 6½. Inviato al modulo: 6,5 (come nelle opzioni).
   function fmt(v) { var w = Math.floor(v); return v % 1 !== 0 ? w + "½" : String(w); }
   function voteValue(v) { return v % 1 !== 0 ? String(v).replace(".", ",") : String(v); }
-  function wordFor(v) { return WORDS[Math.min(10, Math.max(6, Math.floor(v)))]; }
+  function wordFor(v) { return t("w" + Math.min(10, Math.max(6, Math.floor(v)))); }
 
   var people = NAMES.map(function (n, i) {
     var parts = n.split(" ");
@@ -269,6 +368,7 @@ input[type="range"] { width: 100%; accent-color: var(--pitch); height: 32px; mar
   var done = {};   // key -> voto già inviato da questo telefono
   var sel = people[0].key;
   var sending = false;
+  var lastStatusKey = "";
 
   try { me = localStorage.getItem("pagelle-me") || ""; } catch (e) {}
   try { done = JSON.parse(localStorage.getItem("pagelle-done") || "{}") || {}; } catch (e) { done = {}; }
@@ -276,7 +376,7 @@ input[type="range"] { width: 100%; accent-color: var(--pitch); height: 32px; mar
 
   var meSel = $("me");
   var opt0 = document.createElement("option");
-  opt0.value = ""; opt0.textContent = "Scegli il tuo nome";
+  opt0.value = "";
   meSel.appendChild(opt0);
   people.forEach(function (p) {
     var o = document.createElement("option");
@@ -305,8 +405,8 @@ input[type="range"] { width: 100%; accent-color: var(--pitch); height: 32px; mar
     for (var i = 0; i < pp.length; i++) pp[i].className = "pip" + (i < n ? " on" : "");
     var left = MIN - n;
     $("progressMsg").textContent = left > 0
-      ? (left === 1 ? "Ne manca 1 al minimo" : "Ne mancano " + left + " al minimo")
-      : "Minimo raggiunto, ogni scheda in più migliora le pagelle";
+      ? (left === 1 ? t("left1") : t("leftN", { n: left }))
+      : t("reached");
   }
 
   function renderRoster() {
@@ -324,10 +424,10 @@ input[type="range"] { width: 100%; accent-color: var(--pitch); height: 32px; mar
       var first = document.createElement("div"); first.className = "first"; first.textContent = p.first;
       var last = document.createElement("div"); last.className = "last"; last.textContent = p.last;
       var tag = document.createElement("div"); tag.className = "tag";
-      tag.textContent = done[p.key] !== undefined ? "Messo a referto" : (isMe ? "Autovoto" : "Da votare");
+      tag.textContent = done[p.key] !== undefined ? t("tagDone") : (isMe ? t("tagSelf") : t("tagTodo"));
 
       b.appendChild(num); b.appendChild(first); b.appendChild(last); b.appendChild(tag);
-      if (isMe) { var y = document.createElement("span"); y.className = "you"; y.textContent = "Tu"; b.appendChild(y); }
+      if (isMe) { var y = document.createElement("span"); y.className = "you"; y.textContent = t("you"); b.appendChild(y); }
       if (done[p.key] !== undefined) { var st = document.createElement("span"); st.className = "stamp"; st.textContent = fmt(done[p.key]); b.appendChild(st); }
       b.addEventListener("click", function () { select(p.key, true); });
       r.appendChild(b);
@@ -340,17 +440,26 @@ input[type="range"] { width: 100%; accent-color: var(--pitch); height: 32px; mar
     $("voteWord").textContent = wordFor(v);
   }
 
-  function loadSheet() {
+  function renderSheetHead() {
     var p = selPerson();
-    $("sheetLabel").textContent = (p.key === meKey() ? "Autovoto" : "Pagella") + " · Maglia n° " + p.num;
+    $("sheetLabel").textContent = t(p.key === meKey() ? "sheetSelf" : "sheetCard", { n: p.num });
     $("sheetName").textContent = p.name;
+  }
+
+  function showAlreadyHint() {
+    var p = selPerson();
+    if (done[p.key] !== undefined) setStatus(t("already"));
+    else setStatus("");
+  }
+
+  function loadSheet() {
+    renderSheetHead();
     $("voto").value = "6";
     $("campo").value = "";
     $("tallone").value = "";
     $("campoN").textContent = "0";
     updateVoteReadout();
-    $("save").textContent = "Metti a referto";
-    setStatus(done[p.key] !== undefined ? "Hai già votato questo collega. Una nuova scheda si aggiunge alla precedente." : "");
+    showAlreadyHint();
   }
 
   function select(key, scroll) {
@@ -362,12 +471,37 @@ input[type="range"] { width: 100%; accent-color: var(--pitch); height: 32px; mar
     }
   }
 
+  function applyLang() {
+    document.documentElement.lang = lang;
+    Array.prototype.forEach.call(document.querySelectorAll("[data-i18n]"), function (el) {
+      el.textContent = t(el.getAttribute("data-i18n"));
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-i18n-ph]"), function (el) {
+      el.setAttribute("placeholder", t(el.getAttribute("data-i18n-ph")));
+    });
+    Array.prototype.forEach.call(document.querySelectorAll(".lang button"), function (b) {
+      b.setAttribute("aria-pressed", b.getAttribute("data-lang") === lang ? "true" : "false");
+    });
+    opt0.textContent = t("pickme");
+    renderProgress();
+    renderRoster();
+    renderSheetHead();
+    updateVoteReadout();
+    if (!sending) showAlreadyHint();
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll(".lang button"), function (b) {
+    b.addEventListener("click", function () {
+      lang = b.getAttribute("data-lang");
+      try { localStorage.setItem("pagelle-lang", lang); } catch (e) {}
+      applyLang();
+    });
+  });
+
   meSel.addEventListener("change", function () {
     me = meSel.value;
     try { localStorage.setItem("pagelle-me", me); } catch (e) {}
-    renderProgress(); renderRoster();
-    var p = selPerson();
-    $("sheetLabel").textContent = (p.key === meKey() ? "Autovoto" : "Pagella") + " · Maglia n° " + p.num;
+    renderProgress(); renderRoster(); renderSheetHead();
   });
 
   $("voto").addEventListener("input", updateVoteReadout);
@@ -376,9 +510,9 @@ input[type="range"] { width: 100%; accent-color: var(--pitch); height: 32px; mar
   $("form").addEventListener("submit", function (ev) {
     ev.preventDefault();
     if (sending) return;
-    if (!me) { setStatus("Prima scegli il tuo nome in alto.", "err"); meSel.focus(); return; }
+    if (!me) { setStatus(t("needName"), "err"); meSel.focus(); return; }
     var campo = $("campo").value.trim();
-    if (!campo) { setStatus("Scrivi almeno una riga su com'è andato in campo.", "err"); $("campo").focus(); return; }
+    if (!campo) { setStatus(t("needCampo"), "err"); $("campo").focus(); return; }
 
     var p = selPerson();
     var v = parseFloat($("voto").value);
@@ -394,13 +528,13 @@ input[type="range"] { width: 100%; accent-color: var(--pitch); height: 32px; mar
 
     sending = true;
     $("save").disabled = true;
-    setStatus("Invio...");
+    setStatus(t("sending"));
     fetch(FORM_URL, { method: "POST", mode: "no-cors", body: body })
       .then(function () {
         done[p.key] = v;
         try { localStorage.setItem("pagelle-done", JSON.stringify(done)); } catch (e) {}
         renderProgress(); renderRoster();
-        setStatus("Messo a referto: " + p.name, "ok");
+        setStatus(t("sent", { name: p.name }), "ok");
         var idx = people.findIndex(function (q) { return q.key === p.key; });
         var next = null;
         for (var i = 1; i <= people.length; i++) {
@@ -408,16 +542,17 @@ input[type="range"] { width: 100%; accent-color: var(--pitch); height: 32px; mar
           if (q.key !== meKey() && done[q.key] === undefined) { next = q; break; }
         }
         if (next) {
-          setTimeout(function () { select(next.key, false); setStatus("Messo a referto: " + p.name + ". Tocca a " + next.first + ".", "ok"); }, 800);
+          setTimeout(function () { select(next.key, false); setStatus(t("sentNext", { name: p.name, first: next.first }), "ok"); }, 800);
         }
       })
       .catch(function () {
-        setStatus("Non sono riuscito a inviare. Controlla la connessione e riprova.", "err");
+        setStatus(t("fail"), "err");
       })
       .then(function () { sending = false; $("save").disabled = false; });
   });
 
-  renderProgress(); renderRoster(); loadSheet();
+  applyLang();
+  loadSheet();
 })();
 </script>
 </body>
