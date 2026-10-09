@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Pagelle CPHI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Big+Shoulders+Display:wght@700;800;900&display=swap">
+<style>
+/* Layout: carta da giornale sportivo, formazione a griglia di figurine a sinistra, pagella da compilare a destra (sotto su telefono). */
+:root {
+  --paper: #F5D3D1;
+  --paper-2: #EDBDBA;
+  --card: #FFF8F3;
+  --ink: #1B1414;
+  --ink-soft: #5E4846;
+  --pitch: #1F6A3B;
+  --pitch-ink: #FFFFFF;
+  --rule: #C79A97;
+  --flag: #E2AE00;
+  --alert: #A91F2E;
+  --font-display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
+  --font-body: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0E2418;
+    --paper-2: #17331F;
+    --card: #12301F;
+    --ink: #F4ECE3;
+    --ink-soft: #A7BDAE;
+    --pitch: #EBA9A6;
+    --pitch-ink: #0E2418;
+    --rule: #2D5539;
+    --flag: #F2C94C;
+    --alert: #FF9AA2;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0E2418;
+  --paper-2: #17331F;
+  --card: #12301F;
+  --ink: #F4ECE3;
+  --ink-soft: #A7BDAE;
+  --pitch: #EBA9A6;
+  --pitch-ink: #0E2418;
+  --rule: #2D5539;
+  --flag: #F2C94C;
+  --alert: #FF9AA2;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  padding-inline: 16px;
+  padding-block: 28px 56px;
+}
+.wrap { max-width: 1040px; margin-inline: auto; display: flex; flex-direction: column; gap: 28px; }
+button, input, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--pitch); outline-offset: 2px; }
+
+.masthead { display: flex; flex-direction: column; gap: 10px; border-bottom: 3px solid var(--ink); padding-bottom: 18px; }
+.eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--ink-soft); }
+h1 {
+  font-family: var(--font-display); font-weight: 900; text-transform: uppercase;
+  font-size: clamp(56px, 13vw, 124px); line-height: .86; margin: 0; letter-spacing: -.01em;
+  text-wrap: balance;
+}
+.lede { max-width: 56ch; margin: 0; font-size: 17px; }
+
+.bar { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+@media (min-width: 700px) { .bar { grid-template-columns: minmax(0, 320px) minmax(0, 1fr); align-items: end; } }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.field label, .label {
+  font-size: 12px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: var(--ink-soft);
+}
+select, input[type="text"], textarea {
+  width: 100%; background: var(--card); border: 2px solid var(--ink); border-radius: 2px; padding: 11px 12px; min-height: 46px;
+}
+textarea { resize: vertical; min-height: 110px; line-height: 1.45; }
+select { appearance: none; -webkit-appearance: none; padding-right: 38px;
+  background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%), linear-gradient(135deg, var(--ink) 50%, transparent 50%);
+  background-position: calc(100% - 20px) 50%, calc(100% - 14px) 50%;
+  background-size: 6px 6px, 6px 6px; background-repeat: no-repeat;
+}
+.progress { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.progress-row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+.progress-count { font-family: var(--font-display); font-weight: 800; font-size: 34px; line-height: 1; font-variant-numeric: tabular-nums; }
+.progress-count span { font-size: 18px; color: var(--ink-soft); font-weight: 700; }
+.progress-msg { font-size: 14px; color: var(--ink-soft); }
+.pips { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+.pip { height: 10px; background: var(--paper-2); border: 1.5px solid var(--ink); }
+.pip.on { background: var(--pitch); }
+
+.main { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: start; }
+@media (min-width: 880px) { .main { grid-template-columns: minmax(0, 1fr) 380px; } .sheet { position: sticky; top: 16px; } }
+.section-title { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; font-size: 26px; letter-spacing: .02em; margin: 0 0 12px; }
+
+.roster { display: grid; grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 10px; }
+.player {
+  position: relative; text-align: left; cursor: pointer; min-width: 0;
+  background: var(--card); border: 2px solid var(--ink); border-radius: 2px;
+  padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 2px; min-height: 124px;
+}
+.player:hover { background: var(--paper-2); }
+.player[aria-pressed="true"] { background: var(--pitch); color: var(--pitch-ink); }
+.player .num { font-family: var(--font-display); font-weight: 900; font-size: 40px; line-height: .9; font-variant-numeric: tabular-nums; }
+.player .first { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; margin-top: 6px; overflow-wrap: anywhere; }
+.player .last { font-family: var(--font-display); font-weight: 800; font-size: 24px; line-height: 1; text-transform: uppercase; overflow-wrap: anywhere; }
+.player .tag {
+  margin-top: auto; padding-top: 8px; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.player[aria-pressed="true"] .tag { color: var(--pitch-ink); }
+.player .you {
+  position: absolute; top: 10px; right: 10px; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  background: var(--flag); color: #1B1414; padding: 2px 6px;
+}
+.stamp {
+  position: absolute; top: 8px; right: 8px; min-width: 38px; height: 30px; padding-inline: 6px; display: grid; place-items: center;
+  background: var(--flag); color: #1B1414; font-family: var(--font-display); font-weight: 900; font-size: 22px; line-height: 1;
+  border: 2px solid #1B1414; transform: rotate(4deg);
+}
+.player.has-you .stamp { top: 36px; }
+
+.sheet { background: var(--card); border: 2px solid var(--ink); border-radius: 2px; display: flex; flex-direction: column; min-width: 0; }
+.sheet-head { background: var(--ink); color: var(--paper); padding: 12px 16px; display: flex; flex-direction: column; gap: 2px; }
+.sheet-head .label { color: var(--paper); opacity: .75; }
+.sheet-head h3 { margin: 0; font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: 34px; line-height: 1; overflow-wrap: anywhere; }
+.sheet-body { padding: 16px; display: flex; flex-direction: column; gap: 18px; }
+.vote { display: flex; flex-direction: column; gap: 8px; }
+.vote-read { display: flex; align-items: baseline; gap: 12px; }
+.vote-num { font-family: var(--font-display); font-weight: 900; font-size: 76px; line-height: .85; min-width: 1.2ch; font-variant-numeric: tabular-nums; }
+.vote-word { font-size: 15px; font-weight: 600; color: var(--ink-soft); }
+input[type="range"] { width: 100%; accent-color: var(--pitch); height: 32px; margin: 0; }
+.ticks { display: flex; justify-content: space-between; font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--ink-soft); padding-inline: 2px; font-variant-numeric: tabular-nums; }
+.hint { font-size: 13px; color: var(--ink-soft); margin: 0; }
+.count { font-size: 12px; color: var(--ink-soft); text-align: right; font-variant-numeric: tabular-nums; }
+.actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.btn {
+  background: var(--pitch); color: var(--pitch-ink); border: 2px solid var(--ink); border-radius: 2px;
+  font-family: var(--font-display); font-weight: 800; font-size: 22px; letter-spacing: .04em; text-transform: uppercase;
+  padding: 8px 18px; min-height: 48px; cursor: pointer;
+}
+.btn:hover:not(:disabled) { filter: brightness(1.08); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.status { font-size: 14px; color: var(--ink-soft); min-height: 1.4em; flex: 1 1 200px; min-width: 0; }
+.status.err { color: var(--alert); font-weight: 600; }
+.status.ok { color: var(--pitch); font-weight: 600; }
+
+.rules { border-top: 2px solid var(--ink); padding-top: 14px; font-size: 14px; color: var(--ink-soft); max-width: 70ch; margin: 0; }
+.rules strong { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <div class="eyebrow">CPHI Milano · Fine partita</div>
+    <h1>Le pagelle</h1>
+    <p class="lede">L'evento è finito, ora si danno i voti. Scegli un collega, dagli un voto e racconta come ha giocato.</p>
+  </header>
+
+  <section class="bar" aria-label="Il tuo profilo e i progressi">
+    <div class="field">
+      <label for="me">Chi sei?</label>
+      <select id="me"></select>
+    </div>
+    <div class="progress">
+      <div class="progress-row">
+        <div class="progress-count" aria-live="polite"><b id="doneN">0</b><span> / 5 colleghi</span></div>
+        <div class="progress-msg" id="progressMsg"></div>
+      </div>
+      <div class="pips" id="pips" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <div class="main">
+    <section aria-labelledby="rosterTitle">
+      <h2 class="section-title" id="rosterTitle">La formazione</h2>
+      <div class="roster" id="roster"></div>
+    </section>
+
+    <section class="sheet" id="sheet" aria-labelledby="sheetName">
+      <div class="sheet-head">
+        <div class="label" id="sheetLabel">Pagella</div>
+        <h3 id="sheetName">Nome</h3>
+      </div>
+      <form class="sheet-body" id="form" novalidate>
+        <div class="vote">
+          <label class="label" for="voto">Che voto si merita?</label>
+          <div class="vote-read">
+            <div class="vote-num" id="voteNum">6</div>
+            <div class="vote-word" id="voteWord">Politico</div>
+          </div>
+          <input type="range" id="voto" min="6" max="10" step="0.5" value="6">
+          <div class="ticks" aria-hidden="true"><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
+          <p class="hint">Qui nessuno è bocciato: si parte dal 6, che è il voto politico.</p>
+        </div>
+
+        <div class="field">
+          <label for="campo">Com'è andato in campo al CPHI?</label>
+          <textarea id="campo" maxlength="400" placeholder="Un momento memorabile, un'abitudine, il ruolo che gli hai visto ricoprire (portiere dello stand, bomber dei contatti, regista del caffè...)"></textarea>
+          <div class="count"><span id="campoN">0</span>/400</div>
+        </div>
+
+        <div class="field">
+          <label for="tallone">Il suo superpotere o tallone d'Achille? <span style="text-transform:none;letter-spacing:0;font-weight:500">(facoltativo)</span></label>
+          <input type="text" id="tallone" maxlength="100" placeholder="Anche una sola parola">
+        </div>
+
+        <div class="actions">
+          <button type="submit" class="btn" id="save">Metti a referto</button>
+          <div class="status" id="status" role="status" aria-live="polite"></div>
+        </div>
+      </form>
+    </section>
+  </div>
+
+  <p class="rules"><strong>Si scherza: battute affettuose, altrimenti cartellino rosso.</strong> Le valutazioni sono anonime: non viene salvato chi ha votato chi (solo l'autovoto si riconosce da sé). Compila tutte le schede che vuoi, minimo 5 colleghi.</p>
+</div>
+
+<script>
+(function () {
+  // Collegamento al modulo Google (codici ricavati dal link precompilato).
+  var FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdRGNttmHAbVbkw863MB6KTTGMkFUJ-71bkwDUQPJ0H0t_jOQ/formResponse";
+  var ENTRY = {
+    chi: "entry.1907016002",
+    auto: "entry.414395713",
+    voto: "entry.1495334691",
+    campo: "entry.273365128",
+    tallone: "entry.1689429620"
+  };
+
+  var NAMES = [
+    "Silvio Donati", "Massimiliano Andreoli", "Barbara Spinetta", "Vania Rullo", "Katia Bertolini",
+    "Matteo Carrasso", "Andrea Molaschi", "Elisa Cuzzolin", "Elisa Angelini", "Tommaso Landolfi",
+    "Fatima Ayash", "Lucio Sanzeri", "Silvia Morganti", "Chiara Grignani", "Heather DeFilipo"
+  ];
+  var MIN = 5;
+  var WORDS = { 6: "Politico", 7: "Buona prova", 8: "Gran partita", 9: "Fuoriclasse", 10: "Pallone d'oro" };
+
+  function $(id) { return document.getElementById(id); }
+  function slug(s) {
+    return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  }
+  // Mostrato nella pagina: 6½. Inviato al modulo: 6,5 (come nelle opzioni).
+  function fmt(v) { var w = Math.floor(v); return v % 1 !== 0 ? w + "½" : String(w); }
+  function voteValue(v) { return v % 1 !== 0 ? String(v).replace(".", ",") : String(v); }
+  function wordFor(v) { return WORDS[Math.min(10, Math.max(6, Math.floor(v)))]; }
+
+  var people = NAMES.map(function (n, i) {
+    var parts = n.split(" ");
+    return { name: n, key: slug(n), num: i + 1, first: parts[0], last: parts.slice(1).join(" ") };
+  });
+
+  var me = "";
+  var done = {};   // key -> voto già inviato da questo telefono
+  var sel = people[0].key;
+  var sending = false;
+
+  try { me = localStorage.getItem("pagelle-me") || ""; } catch (e) {}
+  try { done = JSON.parse(localStorage.getItem("pagelle-done") || "{}") || {}; } catch (e) { done = {}; }
+  if (!people.some(function (p) { return p.name === me; })) me = "";
+
+  var meSel = $("me");
+  var opt0 = document.createElement("option");
+  opt0.value = ""; opt0.textContent = "Scegli il tuo nome";
+  meSel.appendChild(opt0);
+  people.forEach(function (p) {
+    var o = document.createElement("option");
+    o.value = p.name; o.textContent = p.name;
+    meSel.appendChild(o);
+  });
+  meSel.value = me;
+
+  var pips = $("pips");
+  for (var i = 0; i < MIN; i++) { var d = document.createElement("div"); d.className = "pip"; pips.appendChild(d); }
+
+  function meKey() { return me ? slug(me) : ""; }
+  function selPerson() { return people.filter(function (p) { return p.key === sel; })[0]; }
+
+  function setStatus(msg, cls) {
+    var s = $("status");
+    s.textContent = msg || "";
+    s.className = "status" + (cls ? " " + cls : "");
+  }
+
+  function renderProgress() {
+    var mk = meKey();
+    var n = people.filter(function (p) { return p.key !== mk && done[p.key] !== undefined; }).length;
+    $("doneN").textContent = String(n);
+    var pp = pips.children;
+    for (var i = 0; i < pp.length; i++) pp[i].className = "pip" + (i < n ? " on" : "");
+    var left = MIN - n;
+    $("progressMsg").textContent = left > 0
+      ? (left === 1 ? "Ne manca 1 al minimo" : "Ne mancano " + left + " al minimo")
+      : "Minimo raggiunto, ogni scheda in più migliora le pagelle";
+  }
+
+  function renderRoster() {
+    var r = $("roster");
+    r.textContent = "";
+    var mk = meKey();
+    people.forEach(function (p) {
+      var b = document.createElement("button");
+      b.type = "button";
+      var isMe = p.key === mk;
+      b.className = "player" + (isMe ? " has-you" : "");
+      b.setAttribute("aria-pressed", p.key === sel ? "true" : "false");
+
+      var num = document.createElement("div"); num.className = "num"; num.textContent = String(p.num);
+      var first = document.createElement("div"); first.className = "first"; first.textContent = p.first;
+      var last = document.createElement("div"); last.className = "last"; last.textContent = p.last;
+      var tag = document.createElement("div"); tag.className = "tag";
+      tag.textContent = done[p.key] !== undefined ? "Messo a referto" : (isMe ? "Autovoto" : "Da votare");
+
+      b.appendChild(num); b.appendChild(first); b.appendChild(last); b.appendChild(tag);
+      if (isMe) { var y = document.createElement("span"); y.className = "you"; y.textContent = "Tu"; b.appendChild(y); }
+      if (done[p.key] !== undefined) { var st = document.createElement("span"); st.className = "stamp"; st.textContent = fmt(done[p.key]); b.appendChild(st); }
+      b.addEventListener("click", function () { select(p.key, true); });
+      r.appendChild(b);
+    });
+  }
+
+  function updateVoteReadout() {
+    var v = parseFloat($("voto").value);
+    $("voteNum").textContent = fmt(v);
+    $("voteWord").textContent = wordFor(v);
+  }
+
+  function loadSheet() {
+    var p = selPerson();
+    $("sheetLabel").textContent = (p.key === meKey() ? "Autovoto" : "Pagella") + " · Maglia n° " + p.num;
+    $("sheetName").textContent = p.name;
+    $("voto").value = "6";
+    $("campo").value = "";
+    $("tallone").value = "";
+    $("campoN").textContent = "0";
+    updateVoteReadout();
+    $("save").textContent = "Metti a referto";
+    setStatus(done[p.key] !== undefined ? "Hai già votato questo collega. Una nuova scheda si aggiunge alla precedente." : "");
+  }
+
+  function select(key, scroll) {
+    sel = key;
+    renderRoster();
+    loadSheet();
+    if (scroll && window.matchMedia("(max-width: 879px)").matches) {
+      $("sheet").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  }
+
+  meSel.addEventListener("change", function () {
+    me = meSel.value;
+    try { localStorage.setItem("pagelle-me", me); } catch (e) {}
+    renderProgress(); renderRoster();
+    var p = selPerson();
+    $("sheetLabel").textContent = (p.key === meKey() ? "Autovoto" : "Pagella") + " · Maglia n° " + p.num;
+  });
+
+  $("voto").addEventListener("input", updateVoteReadout);
+  $("campo").addEventListener("input", function () { $("campoN").textContent = String($("campo").value.length); });
+
+  $("form").addEventListener("submit", function (ev) {
+    ev.preventDefault();
+    if (sending) return;
+    if (!me) { setStatus("Prima scegli il tuo nome in alto.", "err"); meSel.focus(); return; }
+    var campo = $("campo").value.trim();
+    if (!campo) { setStatus("Scrivi almeno una riga su com'è andato in campo.", "err"); $("campo").focus(); return; }
+
+    var p = selPerson();
+    var v = parseFloat($("voto").value);
+    var body = new URLSearchParams();
+    body.set(ENTRY.chi, p.name);
+    body.set(ENTRY.auto, p.key === meKey() ? "Sì" : "No");
+    body.set(ENTRY.voto, voteValue(v));
+    body.set(ENTRY.campo, campo);
+    var tallone = $("tallone").value.trim();
+    if (tallone) body.set(ENTRY.tallone, tallone);
+    body.set("fvv", "1");
+    body.set("pageHistory", "0");
+
+    sending = true;
+    $("save").disabled = true;
+    setStatus("Invio...");
+    fetch(FORM_URL, { method: "POST", mode: "no-cors", body: body })
+      .then(function () {
+        done[p.key] = v;
+        try { localStorage.setItem("pagelle-done", JSON.stringify(done)); } catch (e) {}
+        renderProgress(); renderRoster();
+        setStatus("Messo a referto: " + p.name, "ok");
+        var idx = people.findIndex(function (q) { return q.key === p.key; });
+        var next = null;
+        for (var i = 1; i <= people.length; i++) {
+          var q = people[(idx + i) % people.length];
+          if (q.key !== meKey() && done[q.key] === undefined) { next = q; break; }
+        }
+        if (next) {
+          setTimeout(function () { select(next.key, false); setStatus("Messo a referto: " + p.name + ". Tocca a " + next.first + ".", "ok"); }, 800);
+        }
+      })
+      .catch(function () {
+        setStatus("Non sono riuscito a inviare. Controlla la connessione e riprova.", "err");
+      })
+      .then(function () { sending = false; $("save").disabled = false; });
+  });
+
+  renderProgress(); renderRoster(); loadSheet();
+})();
+</script>
+</body>
+</html>
