@@ -4,12 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
+<meta name="robots" content="noindex, nofollow, noimageindex">
 <title>Pagelle CPHI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Big+Shoulders+Display:wght@700;800;900&display=swap">
 <style>
-/* Layout: carta da giornale sportivo, formazione a griglia di figurine a sinistra, pagella da compilare a destra (sotto su telefono). */
 :root {
   --paper: #F5D3D1;
   --paper-2: #EDBDBA;
@@ -17,160 +17,125 @@
   --ink: #1B1414;
   --ink-soft: #5E4846;
   --pitch: #1F6A3B;
+  --pitch-2: #237544;
   --pitch-ink: #FFFFFF;
-  --rule: #C79A97;
   --flag: #E2AE00;
-  --alert: #A91F2E;
   --font-display: "Big Shoulders Display", "Arial Narrow", Impact, sans-serif;
   --font-body: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
   color-scheme: light;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --paper: #0E2418;
-    --paper-2: #17331F;
-    --card: #12301F;
-    --ink: #F4ECE3;
-    --ink-soft: #A7BDAE;
-    --pitch: #EBA9A6;
-    --pitch-ink: #0E2418;
-    --rule: #2D5539;
-    --flag: #F2C94C;
-    --alert: #FF9AA2;
-    color-scheme: dark;
+    --paper: #0E2418; --paper-2: #17331F; --card: #12301F; --ink: #F4ECE3; --ink-soft: #A7BDAE;
+    --pitch: #EBA9A6; --pitch-2: #E39C99; --pitch-ink: #0E2418; --flag: #F2C94C; color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --paper: #0E2418;
-  --paper-2: #17331F;
-  --card: #12301F;
-  --ink: #F4ECE3;
-  --ink-soft: #A7BDAE;
-  --pitch: #EBA9A6;
-  --pitch-ink: #0E2418;
-  --rule: #2D5539;
-  --flag: #F2C94C;
-  --alert: #FF9AA2;
-  color-scheme: dark;
+  --paper: #0E2418; --paper-2: #17331F; --card: #12301F; --ink: #F4ECE3; --ink-soft: #A7BDAE;
+  --pitch: #EBA9A6; --pitch-2: #E39C99; --pitch-ink: #0E2418; --flag: #F2C94C; color-scheme: dark;
 }
-
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 html { -webkit-text-size-adjust: 100%; }
 body {
-  margin: 0;
-  background: var(--paper);
-  color: var(--ink);
-  font-family: var(--font-body);
-  font-size: 16px;
-  line-height: 1.5;
-  padding-inline: 16px;
-  padding-block: 28px 56px;
+  margin: 0; background: var(--paper); color: var(--ink);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.5;
+  padding-inline: 16px; padding-block: 28px 56px;
 }
-.wrap { max-width: 1040px; margin-inline: auto; display: flex; flex-direction: column; gap: 28px; }
-button, input, select, textarea { font: inherit; color: inherit; }
-:focus-visible { outline: 3px solid var(--pitch); outline-offset: 2px; }
+body.locked { overflow: hidden; }
+.wrap { max-width: 1040px; margin-inline: auto; display: flex; flex-direction: column; gap: 24px; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--flag); outline-offset: 2px; }
 
+/* Testata */
 .masthead { display: flex; flex-direction: column; gap: 10px; border-bottom: 3px solid var(--ink); padding-bottom: 18px; }
 .topline { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
 .eyebrow { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; font-weight: 700; color: var(--ink-soft); }
 .lang { display: inline-flex; border: 2px solid var(--ink); border-radius: 2px; overflow: hidden; }
-.lang button {
-  background: var(--card); border: 0; padding: 6px 14px; min-height: 36px; cursor: pointer;
-  font-family: var(--font-display); font-weight: 800; font-size: 18px; letter-spacing: .06em;
-}
+.lang button { background: var(--card); border: 0; padding: 6px 14px; min-height: 36px; cursor: pointer;
+  font-family: var(--font-display); font-weight: 800; font-size: 18px; letter-spacing: .06em; }
 .lang button + button { border-left: 2px solid var(--ink); }
 .lang button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
-h1 {
-  font-family: var(--font-display); font-weight: 900; text-transform: uppercase;
-  font-size: clamp(56px, 13vw, 124px); line-height: .86; margin: 0; letter-spacing: -.01em;
-  text-wrap: balance;
-}
-.lede { max-width: 56ch; margin: 0; font-size: 17px; }
+h1 { font-family: var(--font-display); font-weight: 900; text-transform: uppercase;
+  font-size: clamp(56px, 13vw, 124px); line-height: .86; margin: 0; letter-spacing: -.01em; }
+.lede { max-width: 58ch; margin: 0; font-size: 17px; }
 
-.bar { display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
-@media (min-width: 700px) { .bar { grid-template-columns: minmax(0, 320px) minmax(0, 1fr); align-items: end; } }
-.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
-.field label, .label {
-  font-size: 12px; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; color: var(--ink-soft);
-}
-.opt { text-transform: none; letter-spacing: 0; font-weight: 500; }
-select, input[type="text"], textarea {
-  width: 100%; background: var(--card); border: 2px solid var(--ink); border-radius: 2px; padding: 11px 12px; min-height: 46px;
-}
-textarea { resize: vertical; min-height: 110px; line-height: 1.45; }
-select { appearance: none; -webkit-appearance: none; padding-right: 38px;
-  background-image: linear-gradient(45deg, transparent 50%, var(--ink) 50%), linear-gradient(135deg, var(--ink) 50%, transparent 50%);
-  background-position: calc(100% - 20px) 50%, calc(100% - 14px) 50%;
-  background-size: 6px 6px, 6px 6px; background-repeat: no-repeat;
-}
-.progress { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
-.progress-row { display: flex; justify-content: space-between; gap: 12px; align-items: baseline; flex-wrap: wrap; }
-.progress-count { font-family: var(--font-display); font-weight: 800; font-size: 34px; line-height: 1; font-variant-numeric: tabular-nums; }
-.progress-count span { font-size: 18px; color: var(--ink-soft); font-weight: 700; }
-.progress-msg { font-size: 14px; color: var(--ink-soft); }
-.pips { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
-.pip { height: 10px; background: var(--paper-2); border: 1.5px solid var(--ink); }
-.pip.on { background: var(--pitch); }
+/* Barra */
+.bar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.counter { font-family: var(--font-display); font-weight: 800; font-size: 26px; line-height: 1; font-variant-numeric: tabular-nums; }
+.counter span { font-size: 16px; color: var(--ink-soft); font-weight: 700; letter-spacing: .04em; text-transform: uppercase; margin-left: 4px; }
+.tools { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn { background: var(--card); color: var(--ink); border: 2px solid var(--ink); border-radius: 2px; cursor: pointer;
+  font-family: var(--font-display); font-weight: 800; font-size: 18px; letter-spacing: .04em; text-transform: uppercase;
+  padding: 6px 14px; min-height: 44px; }
+.btn.primary { background: var(--pitch); color: var(--pitch-ink); }
+@media (max-width: 420px) { .bar { flex-direction: column; align-items: flex-start; } .btn { font-size: 15px; padding: 6px 10px; } }
+.btn:hover { filter: brightness(1.06); }
 
-.main { display: grid; grid-template-columns: minmax(0, 1fr); gap: 28px; align-items: start; }
-@media (min-width: 880px) { .main { grid-template-columns: minmax(0, 1fr) 380px; } .sheet { position: sticky; top: 16px; } }
-.section-title { font-family: var(--font-display); font-weight: 800; text-transform: uppercase; font-size: 26px; letter-spacing: .02em; margin: 0 0 12px; }
+/* Figurine */
+.roster { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+@media (min-width: 760px) { .roster { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 14px; } }
+.card { position: relative; aspect-ratio: 3 / 4.2; perspective: 1000px; border: 0; padding: 0; background: none; cursor: pointer; text-align: left; min-width: 0; }
+.inner { position: absolute; inset: 0; transition: transform .6s cubic-bezier(.3,.7,.3,1); transform-style: preserve-3d; }
+.card.open .inner { transform: rotateY(180deg); }
+.face { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  border: 2px solid var(--ink); border-radius: 4px; overflow: hidden; display: flex; flex-direction: column; }
+.card:hover .face { box-shadow: 4px 4px 0 var(--ink); }
 
-.roster { display: grid; grid-template-columns: repeat(auto-fill, minmax(158px, 1fr)); gap: 10px; }
-.player {
-  position: relative; text-align: left; cursor: pointer; min-width: 0;
-  background: var(--card); border: 2px solid var(--ink); border-radius: 2px;
-  padding: 10px 12px 12px; display: flex; flex-direction: column; gap: 2px; min-height: 124px;
-}
-.player:hover { background: var(--paper-2); }
-.player[aria-pressed="true"] { background: var(--pitch); color: var(--pitch-ink); }
-.player .num { font-family: var(--font-display); font-weight: 900; font-size: 40px; line-height: .9; font-variant-numeric: tabular-nums; }
-.player .first { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; margin-top: 6px; overflow-wrap: anywhere; }
-.player .last { font-family: var(--font-display); font-weight: 800; font-size: 24px; line-height: 1; text-transform: uppercase; overflow-wrap: anywhere; }
-.player .tag {
-  margin-top: auto; padding-top: 8px; font-size: 12px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
-  color: var(--ink-soft);
-}
-.player[aria-pressed="true"] .tag { color: var(--pitch-ink); }
-.player .you {
-  position: absolute; top: 10px; right: 10px; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-  background: var(--flag); color: #1B1414; padding: 2px 6px;
-}
-.stamp {
-  position: absolute; top: 8px; right: 8px; min-width: 38px; height: 30px; padding-inline: 6px; display: grid; place-items: center;
-  background: var(--flag); color: #1B1414; font-family: var(--font-display); font-weight: 900; font-size: 22px; line-height: 1;
-  border: 2px solid #1B1414; transform: rotate(4deg);
-}
-.player.has-you .stamp { top: 36px; }
+/* Retro: maglia da scoprire */
+.back { background: repeating-linear-gradient(90deg, var(--pitch) 0 22px, var(--pitch-2) 22px 44px); color: var(--pitch-ink);
+  padding: 12px; justify-content: space-between; align-items: center; text-align: center; }
+.back .num { font-family: var(--font-display); font-weight: 900; font-size: clamp(72px, 16vw, 104px); line-height: .85; margin-top: 10%; font-variant-numeric: tabular-nums; }
+.back .who { display: flex; flex-direction: column; gap: 0; }
+.back .first { font-size: 13px; text-transform: uppercase; letter-spacing: .1em; font-weight: 600; }
+.back .last { font-family: var(--font-display); font-weight: 800; font-size: clamp(19px, 5vw, 26px); line-height: 1; text-transform: uppercase; overflow-wrap: anywhere; }
+.back .last.long { font-size: clamp(16px, 4.2vw, 21px); overflow-wrap: normal; }
+.back .tap { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; background: var(--flag); color: #1B1414; padding: 3px 8px; white-space: nowrap; }
+@media (max-width: 420px) { .back .tap { font-size: 10px; letter-spacing: .05em; padding: 3px 6px; } }
 
-.sheet { background: var(--card); border: 2px solid var(--ink); border-radius: 2px; display: flex; flex-direction: column; min-width: 0; }
-.sheet-head { background: var(--ink); color: var(--paper); padding: 12px 16px; display: flex; flex-direction: column; gap: 2px; }
-.sheet-head .label { color: var(--paper); opacity: .75; }
-.sheet-head h3 { margin: 0; font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: 34px; line-height: 1; overflow-wrap: anywhere; }
-.sheet-body { padding: 16px; display: flex; flex-direction: column; gap: 18px; }
-.vote { display: flex; flex-direction: column; gap: 8px; }
-.vote-read { display: flex; align-items: baseline; gap: 12px; }
-.vote-num { font-family: var(--font-display); font-weight: 900; font-size: 76px; line-height: .85; min-width: 1.2ch; font-variant-numeric: tabular-nums; }
-.vote-word { font-size: 15px; font-weight: 600; color: var(--ink-soft); }
-input[type="range"] { width: 100%; accent-color: var(--pitch); height: 32px; margin: 0; }
-.ticks { display: flex; justify-content: space-between; font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--ink-soft); padding-inline: 2px; font-variant-numeric: tabular-nums; }
-.hint { font-size: 13px; color: var(--ink-soft); margin: 0; }
-.count { font-size: 12px; color: var(--ink-soft); text-align: right; font-variant-numeric: tabular-nums; }
-.actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
-.btn {
-  background: var(--pitch); color: var(--pitch-ink); border: 2px solid var(--ink); border-radius: 2px;
-  font-family: var(--font-display); font-weight: 800; font-size: 22px; letter-spacing: .04em; text-transform: uppercase;
-  padding: 8px 18px; min-height: 48px; cursor: pointer;
-}
-.btn:hover:not(:disabled) { filter: brightness(1.08); }
-.btn:disabled { opacity: .45; cursor: not-allowed; }
-.status { font-size: 14px; color: var(--ink-soft); min-height: 1.4em; flex: 1 1 200px; min-width: 0; }
-.status.err { color: var(--alert); font-weight: 600; }
-.status.ok { color: var(--pitch); font-weight: 600; }
+/* Fronte: figurina */
+.front { transform: rotateY(180deg); background: var(--card); }
+.front .pic { position: relative; flex: 1 1 auto; min-height: 0; display: flex; align-items: center; justify-content: center; background: var(--paper-2); border-bottom: 2px solid var(--ink); padding: 8px 6px; container-type: size; }
+.front .pic img { width: 78%; width: min(96cqw, 100cqh); height: auto; aspect-ratio: 1; object-fit: contain; padding: 2%; border-radius: 50%; border: 2px solid var(--ink); background: #fff; }
+.front .n { position: absolute; top: 6px; left: 8px; font-family: var(--font-display); font-weight: 900; font-size: 30px; line-height: 1; }
+.front .info { padding: 8px 10px 10px; display: flex; flex-direction: column; gap: 2px; min-height: 0; }
+.front .title { font-family: var(--font-display); font-weight: 800; font-size: 19px; line-height: 1.02; text-transform: uppercase; overflow-wrap: anywhere; }
+.front .name { font-size: 12px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-soft); }
+.stamp { position: absolute; top: 6px; right: 6px; min-width: 44px; height: 36px; padding-inline: 6px; display: grid; place-items: center;
+  background: var(--flag); color: #1B1414; font-family: var(--font-display); font-weight: 900; font-size: 26px; line-height: 1;
+  border: 2px solid #1B1414; transform: rotate(5deg); }
 
-.rules { border-top: 2px solid var(--ink); padding-top: 14px; font-size: 14px; color: var(--ink-soft); max-width: 70ch; margin: 0; }
-.rules strong { color: var(--ink); }
+/* Pagella aperta */
+.overlay { position: fixed; inset: 0; z-index: 10; background: rgba(27,20,20,.55); display: flex; align-items: center; justify-content: center; padding: 16px; }
+.sheet { background: var(--card); color: var(--ink); border: 2px solid var(--ink); border-radius: 4px; width: 100%; max-width: 640px;
+  max-height: calc(100dvh - 32px); display: flex; flex-direction: column; overflow: hidden; box-shadow: 8px 8px 0 var(--ink); }
+@media (max-width: 600px) {
+  .overlay { padding: 0; }
+  .sheet { max-width: none; height: 100dvh; max-height: none; border: 0; border-radius: 0; box-shadow: none; }
+}
+.sheet-head { background: var(--ink); color: var(--paper); padding: 10px 12px 10px 16px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.sheet-head .who { font-family: var(--font-display); font-weight: 800; font-size: 22px; text-transform: uppercase; letter-spacing: .03em; overflow-wrap: anywhere; }
+.x { background: transparent; border: 2px solid var(--paper); color: var(--paper); width: 40px; height: 40px; flex: none; cursor: pointer; font-size: 22px; line-height: 1; border-radius: 2px; }
+.sheet-body { overflow-y: auto; padding: 20px 20px 24px; display: flex; flex-direction: column; gap: 14px; }
+.hero { display: grid; grid-template-columns: 180px minmax(0, 1fr); gap: 18px; align-items: center; }
+@media (max-width: 420px) { .hero { grid-template-columns: 120px minmax(0, 1fr); gap: 14px; } }
+.hero img { width: 100%; aspect-ratio: 1; object-fit: contain; padding: 2%; border-radius: 50%; border: 2px solid var(--ink); background: #fff; }
+.hero h2 { font-family: var(--font-display); font-weight: 900; text-transform: uppercase; font-size: clamp(30px, 7vw, 44px); line-height: .92; margin: 0 0 8px; overflow-wrap: anywhere; }
+.grade { display: inline-flex; align-items: baseline; gap: 8px; }
+.grade b { font-family: var(--font-display); font-weight: 900; font-size: 52px; line-height: .9; background: var(--flag); color: #1B1414; border: 2px solid #1B1414; padding: 2px 10px 0; transform: rotate(-3deg); display: inline-block; }
+.grade span { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+.desc { font-size: 17px; line-height: 1.6; margin: 0; max-width: 62ch; }
+.note { font-size: 13px; color: var(--ink-soft); font-style: italic; margin: 0; }
+.sheet-foot { border-top: 2px solid var(--ink); display: grid; grid-template-columns: 1fr 1fr; }
+.sheet-foot button { background: var(--card); border: 0; padding: 12px 14px; min-height: 52px; cursor: pointer; font-family: var(--font-display); font-weight: 800; font-size: 18px; text-transform: uppercase; letter-spacing: .03em; }
+.sheet-foot button + button { border-left: 2px solid var(--ink); text-align: right; }
+.sheet-foot button:hover { background: var(--paper-2); }
+
+.foot { border-top: 2px solid var(--ink); padding-top: 14px; font-size: 14px; color: var(--ink-soft); margin: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .inner { transition: none; }
+}
 </style>
 </head>
 <body>
@@ -187,372 +152,271 @@ input[type="range"] { width: 100%; accent-color: var(--pitch); height: 32px; mar
     <p class="lede" data-i18n="lede"></p>
   </header>
 
-  <section class="bar">
-    <div class="field">
-      <label for="me" data-i18n="whoami"></label>
-      <select id="me"></select>
+  <div class="bar">
+    <div class="counter" aria-live="polite"><b id="nOpen">0</b>/15<span data-i18n="revealed"></span></div>
+    <div class="tools">
+      <button type="button" class="btn primary" id="revealAll" data-i18n="revealAll"></button>
+      <button type="button" class="btn" id="hideAll" data-i18n="hideAll"></button>
     </div>
-    <div class="progress">
-      <div class="progress-row">
-        <div class="progress-count" aria-live="polite"><b id="doneN">0</b><span data-i18n="of5"></span></div>
-        <div class="progress-msg" id="progressMsg"></div>
-      </div>
-      <div class="pips" id="pips" aria-hidden="true"></div>
-    </div>
-  </section>
-
-  <div class="main">
-    <section aria-labelledby="rosterTitle">
-      <h2 class="section-title" id="rosterTitle" data-i18n="squad"></h2>
-      <div class="roster" id="roster"></div>
-    </section>
-
-    <section class="sheet" id="sheet" aria-labelledby="sheetName">
-      <div class="sheet-head">
-        <div class="label" id="sheetLabel"></div>
-        <h3 id="sheetName">Nome</h3>
-      </div>
-      <form class="sheet-body" id="form" novalidate>
-        <div class="vote">
-          <label class="label" for="voto" data-i18n="voteLabel"></label>
-          <div class="vote-read">
-            <div class="vote-num" id="voteNum">6</div>
-            <div class="vote-word" id="voteWord"></div>
-          </div>
-          <input type="range" id="voto" min="6" max="10" step="0.5" value="6">
-          <div class="ticks" aria-hidden="true"><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span></div>
-          <p class="hint" data-i18n="hint"></p>
-        </div>
-
-        <div class="field">
-          <label for="campo" data-i18n="campoLabel"></label>
-          <textarea id="campo" maxlength="400" data-i18n-ph="campoPh"></textarea>
-          <div class="count"><span id="campoN">0</span>/400</div>
-        </div>
-
-        <div class="field">
-          <label for="tallone"><span data-i18n="talloneLabel"></span> <span class="opt" data-i18n="optional"></span></label>
-          <input type="text" id="tallone" maxlength="100" data-i18n-ph="tallonePh">
-        </div>
-
-        <div class="actions">
-          <button type="submit" class="btn" id="save" data-i18n="save"></button>
-          <div class="status" id="status" role="status" aria-live="polite"></div>
-        </div>
-      </form>
-    </section>
   </div>
 
-  <p class="rules"><strong data-i18n="rules1"></strong> <span data-i18n="rules2"></span></p>
+  <main class="roster" id="roster"></main>
+
+  <p class="foot" data-i18n="foot"></p>
+</div>
+
+<div class="overlay" id="overlay" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="sTitle">
+    <div class="sheet-head">
+      <div class="who" id="sWho"></div>
+      <button type="button" class="x" id="close" aria-label="Chiudi">✕</button>
+    </div>
+    <div class="sheet-body">
+      <div class="hero">
+        <img id="sImg" alt="">
+        <div>
+          <h2 id="sTitle"></h2>
+          <div class="grade"><span data-i18n="grade"></span><b id="sGrade"></b></div>
+        </div>
+      </div>
+      <p class="desc" id="sDesc"></p>
+      <p class="note" id="sNote" hidden></p>
+    </div>
+    <div class="sheet-foot">
+      <button type="button" id="prev"></button>
+      <button type="button" id="next"></button>
+    </div>
+  </div>
 </div>
 
 <script>
 (function () {
-  // Collegamento al modulo Google (codici ricavati dal link precompilato).
-  // I valori inviati (nomi, "Sì"/"No", voti con la virgola) restano sempre in italiano, in qualsiasi lingua.
-  var FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdRGNttmHAbVbkw863MB6KTTGMkFUJ-71bkwDUQPJ0H0t_jOQ/formResponse";
-  var ENTRY = {
-    chi: "entry.1907016002",
-    auto: "entry.414395713",
-    voto: "entry.1495334691",
-    campo: "entry.273365128",
-    tallone: "entry.1689429620"
-  };
-
-  var NAMES = [
-    "Silvio Donati", "Massimiliano Andreoli", "Barbara Spinetta", "Vania Rullo", "Katia Bertolini",
-    "Matteo Carrasso", "Andrea Molaschi", "Elisa Cuzzolin", "Elisa Angelini", "Tommaso Landolfi",
-    "Fatima Ayash", "Lucio Sanzeri", "Silvia Morganti", "Chiara Grignani", "Heather DeFilipo"
-  ];
-  var MIN = 5;
+  "use strict";
 
   var T = {
     it: {
-      eyebrow: "CPHI Milano · Fine partita",
+      eyebrow: "CPHI Milano · Fischio finale",
       title: "Le pagelle",
-      lede: "L'evento è finito, ora si danno i voti. Scegli un collega, dagli un voto e racconta come ha giocato.",
-      whoami: "Chi sei?",
-      pickme: "Scegli il tuo nome",
-      of5: " / 5 colleghi",
-      left1: "Ne manca 1 al minimo",
-      leftN: "Ne mancano {n} al minimo",
-      reached: "Minimo raggiunto, ogni scheda in più migliora le pagelle",
-      squad: "La formazione",
-      you: "Tu",
-      tagDone: "Messo a referto",
-      tagSelf: "Autovoto",
-      tagTodo: "Da votare",
-      sheetCard: "Pagella · Maglia n° {n}",
-      sheetSelf: "Autovoto · Maglia n° {n}",
-      voteLabel: "Che voto si merita?",
-      hint: "Qui nessuno è bocciato: si parte dal 6, che è il voto politico.",
-      campoLabel: "Com'è andato in campo al CPHI?",
-      campoPh: "Un momento memorabile, un'abitudine, il ruolo che gli hai visto ricoprire (portiere dello stand, bomber dei contatti, regista del caffè...)",
-      talloneLabel: "Il suo superpotere o tallone d'Achille?",
-      optional: "(facoltativo)",
-      tallonePh: "Anche una sola parola",
-      save: "Metti a referto",
-      rules1: "Si scherza: battute affettuose, altrimenti cartellino rosso.",
-      rules2: "Le valutazioni sono anonime: non viene salvato chi ha votato chi (solo l'autovoto si riconosce da sé). Compila tutte le schede che vuoi, minimo 5 colleghi.",
-      w6: "Politico", w7: "Buona prova", w8: "Gran partita", w9: "Fuoriclasse", w10: "Pallone d'oro",
-      needName: "Prima scegli il tuo nome in alto.",
-      needCampo: "Scrivi almeno una riga su com'è andato in campo.",
-      sending: "Invio...",
-      sent: "Messo a referto: {name}",
-      sentNext: "Messo a referto: {name}. Tocca a {first}.",
-      fail: "Non sono riuscito a inviare. Controlla la connessione e riprova.",
-      already: "Hai già votato questo collega. Una nuova scheda si aggiunge alla precedente."
+      lede: "Il verdetto della squadra è arrivato. Tocca una figurina per scoprire voto e soprannome, poi toccala di nuovo per leggere la pagella.",
+      revealed: "scoperte",
+      revealAll: "Scopri tutte",
+      hideAll: "Rimetti coperte",
+      tap: "Tocca per scoprire",
+      grade: "Voto",
+      prev: "← Precedente",
+      next: "Successivo →",
+      close: "Chiudi",
+      foot: "Disclaimer: queste pagelle sono un gioco. Nascono dai voti e dai commenti anonimi dei colleghi, rielaborati con un po\u2019 di fantasia, e ogni battuta è fatta con affetto: nessuna vuole giudicare il lavoro o la persona. Leggetele con lo spirito con cui sono state scritte: un sorriso e un brindisi alla squadra.",
+      noEn: ""
     },
     en: {
-      eyebrow: "CPHI Milan · Full time",
+      eyebrow: "CPHI Milan · Final whistle",
       title: "Player ratings",
-      lede: "The event is over, so it's time for the marks. Pick a colleague, give them a rating and tell us how they played.",
-      whoami: "Who are you?",
-      pickme: "Choose your name",
-      of5: " / 5 colleagues",
-      left1: "1 more to reach the minimum",
-      leftN: "{n} more to reach the minimum",
-      reached: "Minimum reached — every extra card makes the ratings better",
-      squad: "The squad",
-      you: "You",
-      tagDone: "Rated",
-      tagSelf: "Self-rating",
-      tagTodo: "To rate",
-      sheetCard: "Rating card · Shirt no. {n}",
-      sheetSelf: "Self-rating · Shirt no. {n}",
-      voteLabel: "What rating do they deserve?",
-      hint: "Nobody fails here: we start at 6, the courtesy pass mark.",
-      campoLabel: "How did they play at CPHI?",
-      campoPh: "A memorable moment, a habit, the role you saw them play (stand goalkeeper, contact striker, coffee playmaker...)",
-      talloneLabel: "Their superpower or Achilles' heel?",
-      optional: "(optional)",
-      tallonePh: "Even just one word",
-      save: "Submit rating",
-      rules1: "It's all in good fun: affectionate jokes only, or it's a red card.",
-      rules2: "Ratings are anonymous: who voted for whom is not recorded (only a self-rating gives itself away). Fill in as many cards as you like, at least 5 colleagues.",
-      w6: "Pass mark", w7: "Solid showing", w8: "Great match", w9: "World class", w10: "Ballon d'Or",
-      needName: "First choose your name at the top.",
-      needCampo: "Write at least one line about how they played.",
-      sending: "Sending...",
-      sent: "Rated: {name}",
-      sentNext: "Rated: {name}. Next up: {first}.",
-      fail: "Couldn't send. Check your connection and try again.",
-      already: "You've already rated this colleague. A new card will be added to the previous one."
+      lede: "The team has spoken. Tap a card to reveal the rating and nickname, then tap it again to read the full report.",
+      revealed: "revealed",
+      revealAll: "Reveal all",
+      hideAll: "Turn face down",
+      tap: "Tap to reveal",
+      grade: "Rating",
+      prev: "← Previous",
+      next: "Next →",
+      close: "Close",
+      foot: "Disclaimer: these ratings are just for fun. They come from colleagues\u2019 anonymous votes and comments, retold with a little imagination, and every joke is meant with affection: none of it is a judgment of anyone\u2019s work or character. Read them in the spirit they were written: with a smile, and a toast to the team.",
+      noEn: "English version coming soon."
     }
   };
 
-  var lang = "it";
-  try { var sl = localStorage.getItem("pagelle-lang"); if (sl === "it" || sl === "en") lang = sl; } catch (e) {}
+  // Le immagini vanno in img/NN-nome.webp; finché mancano compare un segnaposto.
+  var P = [
+    { n: 1, first: "Silvio", last: "", slug: "silvio", grade: "9+", title: "The Prestige",
+      it: "L’uomo più richiesto e meno raggiungibile del pianeta: perfino lui cerca da settimane di parlare con sé stesso, ma non trova uno slot. Eppure, chissà come, riesce a essere ovunque. Direttore artistico e mental coach del CPHI, come il Mourinho del 2010 entra nella testa dei clienti e li convince che sia tutto perfetto prima ancora di cominciare. Con i top manager di mezzo mondo è un illusionista: li annebbia di acronimi mai sentiti e tira fuori conigli dal cappello, tanto che al confronto Houdini sembra un mulettista. E come ogni mago che si rispetti, padroneggia l’arte di sparire: se scoppia un incendio, lui non c’è. Se invece c’è da gestire un nostro ritardo, lo trasforma in colpa del cliente, che se ne va pure mortificato e riconoscente. A fine giornata arriva il colpo da maestro: virata tattica su cotoletta e aperitivo, per rimettere in piedi una squadra allo stremo. Unica lacuna: la scelta del ristorante per le cene da 2k." },
+    { n: 2, first: "Massimiliano", last: "", slug: "massimiliano", grade: "8½", title: "Il Grizzly di Wall Street",
+      it: "Il papà del CPHI: neo-papà da una settimana, è arrivato in fiera con tre ore di sonno totali nei cinque giorni precedenti. Eppure è rimasto lucido e concentrato, e in campo ha morso le caviglie come il miglior Ringhio Gattuso: insuperabile in interdizione, non lascia passare un cliente senza aver coperto ogni centimetro di campo. Del resto è l’orso bruno di Farmabios: non abbraccia, ma contratta finché non va in letargo. Per tenerlo tranquillo basta che beva e mangi, e se la Coca-Cola aiuta, la birra aiuta di più. A chi gli chiede quanti meeting abbia fatto risponde secco, in puro stile Ingegner Cane: «Mille! Duemila!» Sotto l’armatura da mediano d’acciaio, però, la nascita del figlio ha rivelato un cuore tenerissimo. E c’è sempre un fazzoletto in tasca, per un naso soffiato fin troppo: l’unico motivo per cui non prende 10. Sopravvissuto, e per tre giorni senza nemmeno un vomitino sulla camicia." },
+    { n: 3, first: "Barbara", last: "", slug: "barbara", grade: "9", title: "La Diva di Bollywood",
+      it: "Uno sguardo, un contratto firmato. Come Medusa, Barbara pietrifica la concorrenza con gli occhi azzurro ghiaccio e congela perfino i clienti più subtropicali, tanto da diventare la nostra arma letale con le delegazioni asiatiche. Xena, principessa guerriera alla conquista dell’Asia, domina ogni padiglione con una presenza scenica alla Pamela Anderson. Ha aperto la fiera sfoggiando un outfit total burgundy e da lì non si è più fermata: ha retto il blocco India-Bangladesh tra una trattativa e l’altra, cercando invano di limitare i saccheggi al catering. Spiritosa, solare e con la battuta sempre pronta, è la Barbi(e) di cui tutti abbiamo bisogno, perché con lei la normalità è sopravvalutata. In fiera è un uragano di grinta e fascino: piega le trattative più complesse con lo sguardo e chiude contratti in Oriente con la precisione di un bomber di razza." },
+    { n: 4, first: "Vania", last: "", slug: "vania", grade: "9", title: "La Capitana",
+      it: "La Capitana storica, il Paolo Maldini dello stand: più di vent’anni in Farmabios, venti CPHI sulle spalle e la sicurezza di chi questi campi li domina da sempre. Conosce tutti, perfino i ponteggisti che montano lo stand, e nelle mattine assonnate tiene su la squadra raccontando storie di gloria passata. Quest’anno si è presentata in forma pazzesca, con 15 chili in meno: sguscia tra i tornelli della metro come una topmodel milanese ed è diventata il sogno proibito di ogni standista. Come Maldini, presidia tutta la fascia. La Zia Vania è una fortezza: non le sfugge niente, sa di cosa hai bisogno da qui a duecento anni e, se ti perdi, ti ritrova ovunque tu sia. Nella sua borsa gigante c’è di tutto, tranne la calma. Nelle emergenze sa inventarsi giocate da fantasista: ha girato la fiera elemosinando spille da balia per salvare una cerniera in crisi. E quando la serata sembra ormai compromessa, è sempre lei a salvarla." },
+    { n: 5, first: "Katia", last: "", slug: "katia", grade: "9", title: "La Pianta Carnivora",
+      it: "Rientro in campo col botto dopo l’anno sabbatico, nonostante un po’ di paura iniziale. Guerriera vegana con il radar anti-carne sempre acceso, in fiera ha affrontato la sfida più difficile: trovare qualcosa da mangiare. Missione compiuta grazie a un assist decisivo dalla panchina, con piatti preparati apposta per lei. E a pancia piena Katia si è trasformata nel Tomasson della squadra: killer dell’area APAC, entra quando il gioco si fa duro e la butta dentro. Silenziosa e gentilissima, raggiunge vette mistiche di serenità nel caos più totale, smistando regali e cibarie ai clienti. Ma non fatevi ingannare, perché resta una pianta carnivora: l’energia la tiene in serbo per il momento del bisogno, e allora gestisce anche i clienti più difficili come bambini al parco giochi. È il jolly nascosto che salva la situazione quando meno te lo aspetti. E il vino, a sentire i compagni, è la sua acqua." },
+    { n: 6, first: "Matteo", last: "", slug: "matteo", grade: "8½", title: "Il Mastino di Precisione",
+      it: "Disturbatore a fin di bene: il Mastino è capace di contattarti dieci volte al giorno con ogni mezzo, anche quando sei in riunione, solo perché ci tiene davvero a far quadrare ogni dettaglio. E non molla l’osso neanche a pagarlo oro. Al suo terzo CPHI pensa ancora che orari e planning vengano rispettati, ed è disposto a buttarsi sotto un van in corsa pur di portare a cena quattro clienti affamati. In campo è un mastino vecchio stampo, il Claudio Gentile dello stand: marca a uomo, non fa passare uno spillo e, appena qualcuno prova ad allargarsi fuori dagli schemi, parte la scivolata per rimetterlo in riga. Quando la palla scotta, però, tira fuori il mestiere: sempre al limite del fallo tattico, tra una tartina di salmone e un bicchiere di prosecco, intorta i clienti difficili con classe. Come Zorro si avvicina furtivamente e non li lascia più andare finché non hanno aperto tutte le sue mail. Sempre con la risposta pronta, e anche un po’ ipocondriaco." },
+    { n: 7, first: "Andrea", last: "", slug: "andrea", grade: "9½", title: "Farmabios Stallion",
+      it: "Regista con il vizio del gol. Presidia il desk con l’aplomb di Kevin Costner in Bodyguard e da lì, come il Principe Redondo, detta i tempi di tutta la manovra: smista 2.874 biglietti da visita, apparecchia il catering come un tre stelle Michelin e, già che c’è, si mette in tasca qualche gadget. Il radar, però, resta sempre acceso sull’area avversaria, e quando c’è da colpire diventa il capocannoniere della squadra: il suo fascino irresistibile conquista perfino le hostess dello stand di fronte, senza che lui perda mai il controllo del desk. Quando la partita si fa dura, è lui a prendersi la squadra sulle spalle: motivatore nato, frontman pazzesco, sempre sul pezzo e velocissimo. A negargli l’apoteosi è solo il colletto button-down. Per il resto è puro stallone, e contenerlo non è un’opzione." },
+    { n: 8, first: "Elisa", last: "C.", slug: "elisa-c", grade: "8+", title: "La Boss della Logistica",
+      it: "Il sopracciglio di Ancelotti, alzato e abbinato a un occhio glaciale, respinge chiunque provi a venderle fuffa: gli spedizionieri non hanno scampo. In fiera Elisa va a caccia del packaging passivo perfetto, del miglior confezionamento e dello spedizioniere ideale per i progetti CDMO. La sua carriera al CPHI è appena decollata e già punta più in alto: contratti con SpaceX e Boeing per spedizioni express sub-orbitali. Piccola ma strutturata, scaltra e letale come poche, si propone come Corriere della vita e macina più chilometri di tutti gli spedizionieri in fiera, in una partita di sacrificio spesso lontana dallo stand. Tra una trattativa e l’altra trova comunque il tempo di saccheggiare gli stand collezionando gadget. Menzione d’onore per il camioncino, difeso dalle grinfie di un Benedetti in grande spolver(in)o. Unico neo: l’assenza alla cena finale, che ci ha fatto mancare il traguardo del conto da 1k. Instancabile." },
+    { n: 9, first: "Elisa", last: "A.", slug: "elisa-a", grade: "9½", title: "La Regina delle Spille",
+      it: "Esordio da Champions League: al suo primo CPHI gioca con la sicurezza di una veterana ed è subito la rivelazione della stagione. Mentre gli altri la scoprivano in fiera, lei l’evento lo aveva già costruito dietro le quinte, pezzo per pezzo. Al desk è divina e impeccabile, ma appena gli stand abbassano la guardia tira fuori la classe di Margot, la compagna di Lupin, e fa incetta di spille e gadget fino a guadagnarsi la corona. Nemmeno la cerniera dei pantaloni esplosa a metà fiera è riuscita a scomporla: due giri di scotch, nessun dramma, ed eccola tornare in campo come la leggendaria mummia di Axplora. Dietro quell’aria tranquilla e rispettosa si nasconde una mente strategica raffinata e pericolosamente brillante. Collega i puntini alla velocità della luce, elabora piani geniali e sa farsi volere bene da tutti. Unico punto debole: l’enzima che smaltisce l’alcol, che dopo il secondo brindisi la fa ridere da sola. Certezza assoluta." },
+    { n: 10, first: "Tommaso", last: "", slug: "tommaso", grade: "9", title: "Il d’Artagnan",
+      it: "«Vieni che facciamo una foto»: è la frase d’ordinanza del d’Artagnan del commerciale, giovane artista spavaldo con il fioretto sempre pronto a sfilettare le obiezioni dei clienti con invenzioni geniali. Gli infortuni gli avevano compromesso la preparazione estiva, ma all’evento di punta del pharma si è presentato in stato di grazia. Tra uno starnuto e un broncospasmo ti illustra mille opportunità, e alla fine ne esci più confuso di lui, ma convinto di aver fatto un ottimo affare. Per lui la fiera è stata un gigantesco party, il palcoscenico perfetto per il suo talento da PR: posa da conquistatore, biglietto da visita sfoderato con mossa felina e occhi a forma di cuore, tanto che più che Lead Generation B2B è sembrata una caccia ai profili Instagram. È il Kakà in smoking bianco della squadra: faccia d’angelo e giocate da fuoriclasse, ma colpi di fulmine a ogni stand e cuori infranti (o regalati) in ogni padiglione. Da vero eroe dei due mondi, va d’accordo sia con le mediorientali sia con le americane. Tallone d’Achille: la galanteria, perché non sa dire di no al gentil sesso. Ne esce comunque sopravvissuto, e indenne." },
+    { n: 11, first: "Fatima", last: "", slug: "fatima", grade: "9", title: "La Stellina d’Oriente",
+      it: "Il nostro folletto magico dal Libano ha un superpotere: l’invisibilità. Tutti la cercano, nessuno la trova. Piccola e lesta, sguscia inosservata nella ressa e riparte in contropiede, e la scarpa comoda a fine giornata dice tutto sull’esperienza con cui affronta la giungla urbana milanese. Quando però decide di farsi trovare, non c’è scampo: sorriso smagliante, occhi brillanti, sguardo ipnotico, e in tre secondi porta a casa l’ordine alle sue condizioni. Cittadina del mondo, parla tutte le lingue della terra e chiude le trattative prima che gli altri abbiano capito in che lingua si sta parlando. Team Furbini, niente sconti per nessuno: ha un debole speciale per i suoi clienti più affezionati e, se la situazione si complica, una controfigura regolatoria pronta a entrare in campo. Bassa di statura, ma gigante in campo: un vero tesoro." },
+    { n: 12, first: "Lucio", last: "", slug: "lucio", grade: "9", title: "L’Arancino d’Oro",
+      it: "La persona più socievole del CPHI: come fai a non volergli bene? Incapace per natura di fare una rampa di scale senza ascensore, ma deciso a visitare ogni stand, si è costruito un’agenda da inguaribile ottimista, con meeting incastrati per essere in due posti contemporaneamente. Ha parlato con chiunque (catering, robot, spazzini e, ogni tanto, anche clienti) e ha vissuto ogni passo come una maratona scalzo sui carboni ardenti: l’Eliud Kipchoge dei padiglioni. A tenerlo in piedi ci ha pensato il catering, perché Lucio è il re indiscusso dell’arancino, sempre pronto all’assaggio. Con i clienti usa la tattica dell’orso abbracciatutti: stazza da gigante, sorriso siciliano, un garbo d’altri tempi e un inglese ormai da Premier League. Dopo anni da gregario veste i panni del capitano, che gli calzano a pennello come un completo blu in fresco lana. Ha un futuro da speaker a Radio Montecarlo e intanto applica la massima saggezza siciliana: ascolta tutto, nota tutto e sa esattamente quando è il caso di non aver visto niente." },
+    { n: 13, first: "Silvia", last: "", slug: "silvia", grade: "8+", title: "Gossip Girl",
+      it: "Il radar bivalente: norme e scoop. Colonna portante del Regolatorio, analizza DMF complessi scovando l’errore microscopico e proponendo soluzioni creative. Nel frattempo intercetta e archivia tutti i gossip aziendali alla velocità del 5G: conosce i segreti anche di tua nonna. Fluente in dieci lingue, al tavolo non si fa intimorire da nessuna barriera linguistica, e la sua presenza vale come i migliori assist per i gol dei compagni. Fascino italo-spagnolo, chioma mora e un caratterino niente male: mette tutti in riga con grinta da mediano e si fa rispettare al primo sguardo. Quando serve entra in campo al posto del titolare, spazza la palla oltre la metà campo e fa passare la paura a tutti, sempre con uno stile impeccabile. Specialista, e di supporto anche negli eventi del dopo fiera." },
+    { n: 14, first: "Chiara", last: "", slug: "chiara", grade: "9-", title: "L’Alta Sartoria Regolatoria",
+      it: "Silenzio tattico e caratterino da peperino. Altro pilastro del Regolatorio, Chiara agisce senza fare rumore, ma è scaltra, determinata e sa sempre come muoversi. È un peso piuma dall’impatto che si sente: non si spaventa davanti ai pesi massimi americani e, schierata anche all’ultimo minuto, gioca da supporto o da attaccante a seconda del bisogno. Danza in mezzo al campo tra un fluticasone propionato e un TACA non suo e, con precisione chirurgica, trova sempre la risposta giusta, ammutolendo anche i clienti più pignoli. Nelle sue mani le sfide regolatorie più complesse diventano un gioco da ragazzi, con l’eleganza senza tempo di un abito di alta sartoria firmato Armani. Piccola fuori, gigante dentro: tenera e gentile, ma se sgarri, guai. Unica avvertenza: basso contributo alcolico. Chiedetele tutto, ma non un altro sorso." },
+    { n: 15, first: "Heather", last: "", slug: "heather", grade: "9", title: "Miss Buttafuoco",
+      it: "La star americana della squadra: al suo secondo CPHI domina il mercato nordamericano con fascino, grinta e un inglese, ovviamente, impeccabile. Nonostante il jet lag, se la cava alla grande anche quando intorno a lei tutti parlano italiano. La sua arma è la parlantina: ti sorride ed è fatta, e tra una storia e l’altra il tempo vola senza che tu te ne accorga. Nella terra del calcio esordisce dicendo «soccer», tanto per mettere in chiaro le cose, e poi dribbla i clienti con un doppio passo che manco Ronaldo nel ’98. Conosce chiunque e ha il dono raro di far incontrare persone che non sapevano di doversi conoscere. Il capolavoro dell’evento, però, è il suo vocabolario italiano: tra una trattativa e un aperitivo ha trovato la sua parola guida… BUTTAFUOCO! E il Buttafuoco, anziché frenarla, la accende: dopo mezzo litro le parole escono come fiamme, da vero Drago d’America. Connecting people… and drinking Buttafuoco." }
+  ];
 
-  function t(key, vars) {
-    var s = (T[lang] && T[lang][key]) || T.it[key] || key;
-    if (vars) Object.keys(vars).forEach(function (k) { s = s.split("{" + k + "}").join(vars[k]); });
-    return s;
+  var EN = {"1": {"t": "The Prestige", "d": "The most wanted and least reachable man on the planet: even he has been trying to talk to himself for weeks, but can’t find a slot. And yet, somehow, he manages to be everywhere. Artistic director and mental coach of CPHI, like Mourinho in his 2010 treble season, he gets inside clients’ heads and convinces them everything is perfect before it has even started. With top managers from half the world, he is an illusionist: he dazzles them with acronyms nobody has ever heard of and pulls rabbits out of hats, to the point that Houdini looks like a forklift driver by comparison. And like any self-respecting magician, he has mastered the art of vanishing: if a fire breaks out, he’s nowhere to be seen. If one of our own delays needs handling, he turns it into the client’s fault, and the client walks away embarrassed and grateful. At the end of the day comes the masterstroke: a tactical switch to cotoletta and aperitivo to get an exhausted team back on its feet. His only shortcoming: picking the restaurant for the €2k dinners."}, "2": {"t": "The Wall Street Grizzly", "d": "The dad of CPHI: a father of one week, he arrived at the fair on a grand total of three hours’ sleep over the previous five days. And yet he stayed sharp and focused, snapping at ankles on the pitch like the best Gennaro “Ringhio” Gattuso: unbeatable at breaking up play, he doesn’t let a single client through without covering every inch of the field. After all, he is Farmabios’s brown bear: he doesn’t hug, he negotiates until he goes into hibernation. To keep him calm, just make sure he eats and drinks; Coca-Cola helps, but beer helps more. Ask him how many meetings he’s had and the answer is curt, in pure Ingegner Cane style (a cult Italian comedy character): “A thousand! Two thousand!” Beneath the steel midfielder’s armor, though, the birth of his son has revealed a very tender heart. And there’s always a handkerchief in his pocket, for a nose blown a little too often: the only reason he doesn’t get a 10. A survivor, and three days without a single drop of baby spit-up on his shirt."}, "3": {"t": "The Bollywood Diva", "d": "One look, one signed contract. Like Medusa, Barbara turns the competition to stone with her ice-blue eyes and freezes even the most subtropical clients, which makes her our secret weapon with the Asian delegations. Xena, warrior princess on a quest to conquer Asia, she dominates every hall with Pamela Anderson-level stage presence. She opened the fair in an all-burgundy outfit and never looked back: she held the India-Bangladesh block together between negotiations, trying in vain to stop the raids on the catering. Witty, sunny and always ready with a quip, she is the Barbi(e) we all need, because with her, normal is overrated. At the fair she is a hurricane of grit and charm: she bends the most complex negotiations with a single look and closes deals in the East with the precision of a born goal scorer."}, "4": {"t": "The Captain", "d": "The club’s longtime captain, the Paolo Maldini of the stand: more than twenty years at Farmabios, twenty CPHIs under her belt and the confidence of someone who has ruled these fields forever. She knows everyone, even the crew who put up the stand, and on sleepy mornings she keeps the team going with tales of past glory. This year she showed up in incredible shape, 15 kilos lighter: she glides through the subway turnstiles like a Milanese supermodel and has become the forbidden dream of every booth worker. Like Maldini, she covers the whole flank. Auntie Vania is a fortress: nothing gets past her, she knows what you’ll need for the next two hundred years and, if you get lost, she’ll find you wherever you are. Her giant bag holds everything except calm. In an emergency she can pull off a playmaker’s trick: she toured the fair begging for safety pins to rescue a zipper in crisis. And when the evening seems lost, she is always the one who saves it."}, "5": {"t": "The Venus Flytrap", "d": "A comeback with a bang after her sabbatical year, despite a few early nerves. A vegan warrior with her anti-meat radar always on, at the fair she faced the toughest challenge of all: finding something to eat. Mission accomplished thanks to a decisive assist from the bench, with dishes made just for her. And on a full stomach, Katia turned into the team’s Tomasson: a killer in the APAC box, she comes on when the game gets tough and puts it away. Quiet and endlessly kind, she reaches mystical heights of serenity amid total chaos, handing out gifts and treats to clients. But don’t be fooled, because she is still a carnivorous plant: she saves her energy for when it’s needed, and then she handles even the toughest clients like kids at a playground. She’s the hidden wild card who saves the day when you least expect it. And wine, according to her teammates, is her water."}, "6": {"t": "The Precision Mastiff", "d": "A well-meaning nuisance: the Mastiff can contact you ten times a day by every means available, even mid-meeting, only because he truly cares about getting every detail right. And he won’t let go of the bone even if you paid him in gold. At his third CPHI he still believes schedules and plans will be respected, and he’s willing to throw himself in front of a moving van to get four hungry clients to dinner. On the field he is an old-school mastiff, the Claudio Gentile of the stand: he man-marks, doesn’t let a pin through and, as soon as anyone strays from the game plan, in goes the sliding tackle to bring them back in line. When the ball gets hot, though, he brings out his experience: always on the edge of a tactical foul, between a smoked-salmon canapé and a glass of prosecco, he wins over difficult clients with class. Like Zorro, he creeps up stealthily and doesn’t let them go until they’ve opened all his emails. Always ready with an answer, and a bit of a hypochondriac too."}, "7": {"t": "Farmabios Stallion", "d": "A playmaker with an eye for goal. He guards the desk with the poise of Kevin Costner in The Bodyguard and from there, like “the Prince” Redondo, sets the tempo of every move: he hands out 2,874 business cards, runs the catering like a three-Michelin-star restaurant and, while he’s at it, pockets a few gadgets. His radar, though, is always locked on the opposing box, and when it’s time to strike he becomes the team’s top scorer: his irresistible charm wins over even the hostesses at the booth across the aisle, without him ever losing control of the desk. When the going gets tough, he’s the one who carries the team on his shoulders: a born motivator, an incredible frontman, always on the ball and lightning fast. The only thing standing between him and glory is that button-down collar. Otherwise he is pure stallion, and holding him back is not an option."}, "8": {"t": "The Logistics Boss", "d": "Ancelotti’s eyebrow, raised and paired with an icy stare, repels anyone trying to sell her hot air: freight forwarders don’t stand a chance. At the fair Elisa hunts for the perfect passive packaging, the best packing solution and the ideal forwarder for CDMO projects. Her CPHI career has only just taken off and she is already aiming higher: contracts with SpaceX and Boeing for suborbital express shipments. Small but solid, sharp and lethal like few others, she presents herself as the Courier of a Lifetime and covers more miles than every forwarder at the fair, in a selfless performance often played far from the stand. Between logistics negotiations she still finds time to raid the booths and collect gadgets. Honorable mention for the little van, defended from the clutches of a Benedetti in full swing. The only blemish: missing the final dinner, which cost us the €1k bill milestone. Tireless."}, "9": {"t": "The Pin Queen", "d": "A Champions League debut: at her first CPHI she plays with the composure of a veteran and is instantly the breakout star of the season. While everyone else was just discovering her at the fair, she had already built the event behind the scenes, piece by piece. At the desk she is divine and flawless, but the moment the booths let their guard down, she channels the class of Margot, Lupin’s partner in crime, and hoards pins and gadgets until she has earned the crown. Not even a pants zipper bursting mid-fair could rattle her: a couple of rounds of tape, no drama, and back she comes onto the field as the legendary Axplora mummy. Behind that calm, respectful air lies a refined and dangerously brilliant strategic mind. She connects the dots at the speed of light, comes up with genius plans and has a gift for making everyone love her. Her only weakness: the enzyme that breaks down alcohol, which has her giggling to herself after the second toast. A sure thing."}, "10": {"t": "The d’Artagnan", "d": "“Come on, let’s take a picture”: that’s the standing order of the sales team’s d’Artagnan, a cocky young artist with his foil always ready to fillet clients’ objections with strokes of genius. Injuries had disrupted his preseason, but he turned up at pharma’s flagship event in top form. Between a sneeze and a bronchospasm he walks you through a thousand opportunities, and in the end you walk away more confused than he is, but convinced you’ve struck a great deal. For him the fair was one giant party, the perfect stage for his PR talent: a conqueror’s pose, a business card drawn with feline speed and heart-shaped eyes, so much so that rather than B2B lead generation it looked like a hunt for Instagram profiles. He is the team’s Kaká in a white tuxedo: an angel’s face and world-class moves, but love at first sight at every booth and hearts broken (or given away) in every hall. A true hero of two worlds, he gets along just as well with the Middle Eastern ladies as with the American ones. His Achilles’ heel: gallantry, because he can’t say no to the fairer sex. He makes it out alive all the same, without a scratch."}, "11": {"t": "The Little Star of the East", "d": "Our magical elf from Lebanon has a superpower: invisibility. Everyone is looking for her, and no one can find her. Small and quick, she slips unnoticed through the crowd and breaks away on the counterattack, and her comfortable shoes at the end of the day say it all about the experience she brings to Milan’s urban jungle. But when she decides to be found, there’s no escape: a dazzling smile, sparkling eyes, a hypnotic gaze, and in three seconds she brings home the order on her own terms. A citizen of the world, she speaks every language on earth and closes deals before everyone else has figured out which language they’re speaking. Team Furbini (the sly ones), no discounts for anyone: she has a soft spot for her most loyal clients and, if things get complicated, a regulatory body double ready to come off the bench. Small in stature, but a giant on the field: a true treasure."}, "12": {"t": "The Golden Arancino", "d": "The most sociable person at CPHI: how could you not love him? Naturally incapable of climbing a single flight of stairs without an elevator, yet determined to visit every booth, he built himself an incurable optimist’s schedule, with meetings squeezed in so he could be in two places at once. He talked to anyone and everyone (catering staff, robots, cleaners and, now and then, even clients) and lived every step like a barefoot marathon on hot coals: the Eliud Kipchoge of the exhibition halls. What kept him going was the catering, because Lucio is the undisputed king of the arancino, always ready for a taste. With clients he uses the bear-hug tactic: a giant frame, a Sicilian smile, old-school courtesy and English now worthy of the Premier League. After years as a domestique, he finally gets to be team captain, and the role fits him perfectly, like a tailored blue wool suit. He has a future as a host on Radio Montecarlo, and in the meantime he applies the great Sicilian wisdom: he hears everything, notices everything and knows exactly when it’s best to have seen nothing."}, "13": {"t": "Gossip Girl", "d": "The dual-purpose radar: regulations and scoops. A cornerstone of the Regulatory team, she analyzes complex DMFs, spotting the tiniest error and proposing creative solutions. Meanwhile, she intercepts and files every piece of company gossip at 5G speed: she even knows your grandmother’s secrets. Fluent in ten languages, she sits down at the table without letting any language barrier intimidate her, and her presence is worth as much as the best assists for her teammates’ goals. Italian-Spanish charm, dark hair and quite a temper: she keeps everyone in line with a holding midfielder’s grit and earns respect at first glance. When needed, she comes on for a starter, clears the ball past midfield and calms everyone’s nerves, always with impeccable style. A specialist, and a team player at the after-fair events too."}, "14": {"t": "Regulatory Haute Couture", "d": "Tactical silence and a fiery little temper. Another pillar of the Regulatory team, Chiara works without making a sound, but she is sharp, determined and always knows her next move. A featherweight whose impact you can feel: she isn’t intimidated by the American heavyweights and, even when sent on at the last minute, she plays support or up front as needed. She dances through midfield between a fluticasone propionate and a TACA that isn’t hers and, with surgical precision, always finds the right answer, silencing even the pickiest clients. In her hands, the most complex regulatory challenges become child’s play, with the timeless elegance of an Armani haute couture suit. Small on the outside, a giant on the inside: sweet and kind, but cross her and you’ll regret it. One warning: low alcohol contribution. Ask her for anything, just not another sip."}, "15": {"t": "Miss Buttafuoco", "d": "The team’s American star: at her second CPHI, she dominates the North American market with charm, drive and, of course, flawless English. Jet lag and all, she holds her own even when everyone around her is speaking Italian. Her secret weapon is the gift of gab: one smile and the deal is done, and between one story and the next, time flies by without you even noticing. In the land of calcio, she opens by calling it “soccer,” just to set the record straight, then dribbles past clients with a stepover worthy of Ronaldo in ’98. She knows everyone and has a rare gift for connecting people who never knew they needed to meet. Her real masterpiece of the event, though, is her Italian vocabulary: somewhere between a negotiation and an aperitivo, she found her one word to live by… BUTTAFUOCO! Far from slowing her down, Buttafuoco (literally “fire-thrower,” a red wine from Lombardy’s Oltrepò Pavese) fires her up: after half a liter, her words come out like flames, the mark of a true Dragon of America. Connecting people… and drinking Buttafuoco."}};
+  P.forEach(function (p) { p.en = EN[p.n].d; p.titleEn = EN[p.n].t; });
+  function tt(p) { return lang === "en" ? p.titleEn : p.title; }
+  var KEY_OPEN = "pagelle-revealed", KEY_LANG = "pagelle-lang";
+  var lang = "it", openSet = {}, current = -1;
+
+  function load(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  function save(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function fullName(p) { return p.last ? p.first + " " + p.last : p.first; }
+  function pad(n) { return n < 10 ? "0" + n : String(n); }
+  var IMG = window.PAGELLE_IMG || {};
+  function imgSrc(p) { return IMG[p.n] || ("img/" + pad(p.n) + "-" + p.slug + ".webp"); }
+  function placeholder(p) {
+    var svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><rect width="200" height="200" fill="#FFF8F3"/>' +
+      '<circle cx="100" cy="100" r="78" fill="#EDBDBA"/>' +
+      '<text x="100" y="128" text-anchor="middle" font-family="Impact, Arial Narrow, sans-serif" font-weight="900" font-size="84" fill="#1F6A3B">' + p.n + '</text></svg>';
+    return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  }
+  function setImg(el, p) {
+    el.onerror = function () { el.onerror = null; el.src = placeholder(p); };
+    el.src = imgSrc(p);
   }
 
-  function $(id) { return document.getElementById(id); }
-  function slug(s) {
-    return s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-  }
-  // Mostrato nella pagina: 6½. Inviato al modulo: 6,5 (come nelle opzioni).
-  function fmt(v) { var w = Math.floor(v); return v % 1 !== 0 ? w + "½" : String(w); }
-  function voteValue(v) { return v % 1 !== 0 ? String(v).replace(".", ",") : String(v); }
-  function wordFor(v) { return t("w" + Math.min(10, Math.max(6, Math.floor(v)))); }
+  try { openSet = JSON.parse(load(KEY_OPEN) || "{}") || {}; } catch (e) { openSet = {}; }
+  var savedLang = load(KEY_LANG);
+  if (savedLang === "en" || savedLang === "it") lang = savedLang;
 
-  var people = NAMES.map(function (n, i) {
-    var parts = n.split(" ");
-    return { name: n, key: slug(n), num: i + 1, first: parts[0], last: parts.slice(1).join(" ") };
-  });
+  var roster = document.getElementById("roster");
+  var cards = [];
 
-  var me = "";
-  var done = {};   // key -> voto già inviato da questo telefono
-  var sel = people[0].key;
-  var sending = false;
-  var lastStatusKey = "";
-
-  try { me = localStorage.getItem("pagelle-me") || ""; } catch (e) {}
-  try { done = JSON.parse(localStorage.getItem("pagelle-done") || "{}") || {}; } catch (e) { done = {}; }
-  if (!people.some(function (p) { return p.name === me; })) me = "";
-
-  var meSel = $("me");
-  var opt0 = document.createElement("option");
-  opt0.value = "";
-  meSel.appendChild(opt0);
-  people.forEach(function (p) {
-    var o = document.createElement("option");
-    o.value = p.name; o.textContent = p.name;
-    meSel.appendChild(o);
-  });
-  meSel.value = me;
-
-  var pips = $("pips");
-  for (var i = 0; i < MIN; i++) { var d = document.createElement("div"); d.className = "pip"; pips.appendChild(d); }
-
-  function meKey() { return me ? slug(me) : ""; }
-  function selPerson() { return people.filter(function (p) { return p.key === sel; })[0]; }
-
-  function setStatus(msg, cls) {
-    var s = $("status");
-    s.textContent = msg || "";
-    s.className = "status" + (cls ? " " + cls : "");
-  }
-
-  function renderProgress() {
-    var mk = meKey();
-    var n = people.filter(function (p) { return p.key !== mk && done[p.key] !== undefined; }).length;
-    $("doneN").textContent = String(n);
-    var pp = pips.children;
-    for (var i = 0; i < pp.length; i++) pp[i].className = "pip" + (i < n ? " on" : "");
-    var left = MIN - n;
-    $("progressMsg").textContent = left > 0
-      ? (left === 1 ? t("left1") : t("leftN", { n: left }))
-      : t("reached");
-  }
-
-  function renderRoster() {
-    var r = $("roster");
-    r.textContent = "";
-    var mk = meKey();
-    people.forEach(function (p) {
-      var b = document.createElement("button");
-      b.type = "button";
-      var isMe = p.key === mk;
-      b.className = "player" + (isMe ? " has-you" : "");
-      b.setAttribute("aria-pressed", p.key === sel ? "true" : "false");
-
-      var num = document.createElement("div"); num.className = "num"; num.textContent = String(p.num);
-      var first = document.createElement("div"); first.className = "first"; first.textContent = p.first;
-      var last = document.createElement("div"); last.className = "last"; last.textContent = p.last;
-      var tag = document.createElement("div"); tag.className = "tag";
-      tag.textContent = done[p.key] !== undefined ? t("tagDone") : (isMe ? t("tagSelf") : t("tagTodo"));
-
-      b.appendChild(num); b.appendChild(first); b.appendChild(last); b.appendChild(tag);
-      if (isMe) { var y = document.createElement("span"); y.className = "you"; y.textContent = t("you"); b.appendChild(y); }
-      if (done[p.key] !== undefined) { var st = document.createElement("span"); st.className = "stamp"; st.textContent = fmt(done[p.key]); b.appendChild(st); }
-      b.addEventListener("click", function () { select(p.key, true); });
-      r.appendChild(b);
+  P.forEach(function (p, i) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "card";
+    b.innerHTML =
+      '<div class="inner">' +
+        '<div class="face back"><div class="num">' + p.n + '</div>' +
+          '<div class="who"><span class="last' + (fullName(p).length > 10 ? ' long' : '') + '">' + fullName(p) + '</span></div>' +
+          '<span class="tap" data-i18n="tap"></span></div>' +
+        '<div class="face front"><div class="pic"><span class="n">' + p.n + '</span><span class="stamp">' + p.grade + '</span><img alt="" loading="lazy"></div>' +
+          '<div class="info"><span class="title"></span><span class="name">' + fullName(p) + '</span></div></div>' +
+      '</div>';
+    setImg(b.querySelector("img"), p);
+    b.addEventListener("click", function () {
+      if (!openSet[p.n]) { reveal(i); } else { openSheet(i); }
     });
-  }
+    roster.appendChild(b);
+    cards.push(b);
+  });
 
-  function updateVoteReadout() {
-    var v = parseFloat($("voto").value);
-    $("voteNum").textContent = fmt(v);
-    $("voteWord").textContent = wordFor(v);
+  function labelCard(i) {
+    var p = P[i], b = cards[i];
+    var open = !!openSet[p.n];
+    b.querySelector(".title").textContent = tt(p);
+    b.classList.toggle("open", open);
+    b.setAttribute("aria-label", open
+      ? fullName(p) + ", " + tt(p) + ", " + (lang === "it" ? "voto " : "rating ") + p.grade
+      : fullName(p) + ", " + T[lang].tap);
   }
+  function persist() { save(KEY_OPEN, JSON.stringify(openSet)); }
+  function count() { var c = 0; P.forEach(function (p) { if (openSet[p.n]) c++; }); document.getElementById("nOpen").textContent = c; }
+  function reveal(i) { openSet[P[i].n] = true; labelCard(i); persist(); count(); }
 
-  function renderSheetHead() {
-    var p = selPerson();
-    $("sheetLabel").textContent = t(p.key === meKey() ? "sheetSelf" : "sheetCard", { n: p.num });
-    $("sheetName").textContent = p.name;
+  document.getElementById("revealAll").addEventListener("click", function () {
+    P.forEach(function (p, i) {
+      if (openSet[p.n]) return;
+      setTimeout(function () { reveal(i); }, i * 90);
+    });
+  });
+  document.getElementById("hideAll").addEventListener("click", function () {
+    openSet = {}; persist(); P.forEach(function (p, i) { labelCard(i); }); count();
+  });
+
+  // Pagella
+  var overlay = document.getElementById("overlay");
+  var sImg = document.getElementById("sImg");
+  var lastFocus = null;
+
+  function fill() {
+    var p = P[current], t = T[lang];
+    document.getElementById("sWho").textContent = "N° " + p.n + " · " + fullName(p);
+    document.getElementById("sTitle").textContent = tt(p);
+    document.getElementById("sGrade").textContent = p.grade;
+    var txt = (lang === "en" && p.en) ? p.en : p.it;
+    document.getElementById("sDesc").textContent = txt;
+    document.getElementById("sDesc").lang = (lang === "en" && p.en) ? "en" : "it";
+    var note = document.getElementById("sNote");
+    note.hidden = !(lang === "en" && !p.en);
+    note.textContent = t.noEn;
+    setImg(sImg, p);
+    var prev = P[(current + P.length - 1) % P.length], next = P[(current + 1) % P.length];
+    document.getElementById("prev").textContent = t.prev;
+    document.getElementById("next").textContent = t.next;
+    document.getElementById("prev").setAttribute("aria-label", t.prev.replace("← ", "") + ": " + fullName(prev));
+    document.getElementById("next").setAttribute("aria-label", t.next.replace(" →", "") + ": " + fullName(next));
+    document.getElementById("close").setAttribute("aria-label", t.close);
+    if (!openSet[p.n]) reveal(current);
   }
-
-  function showAlreadyHint() {
-    var p = selPerson();
-    if (done[p.key] !== undefined) setStatus(t("already"));
-    else setStatus("");
+  function openSheet(i) {
+    current = i;
+    lastFocus = document.activeElement;
+    fill();
+    overlay.hidden = false;
+    document.body.classList.add("locked");
+    try { history.pushState({ sheet: true }, ""); } catch (e) {}
+    document.getElementById("close").focus();
   }
-
-  function loadSheet() {
-    renderSheetHead();
-    $("voto").value = "6";
-    $("campo").value = "";
-    $("tallone").value = "";
-    $("campoN").textContent = "0";
-    updateVoteReadout();
-    showAlreadyHint();
+  function closeSheet(fromHistory) {
+    if (overlay.hidden) return;
+    overlay.hidden = true;
+    document.body.classList.remove("locked");
+    if (lastFocus) lastFocus.focus();
+    if (!fromHistory) { try { if (history.state && history.state.sheet) history.back(); } catch (e) {} }
   }
+  function step(d) { current = (current + d + P.length) % P.length; fill(); }
 
-  function select(key, scroll) {
-    sel = key;
-    renderRoster();
-    loadSheet();
-    if (scroll && window.matchMedia("(max-width: 879px)").matches) {
-      $("sheet").scrollIntoView({ behavior: "smooth", block: "start" });
+  document.getElementById("close").addEventListener("click", function () { closeSheet(false); });
+  document.getElementById("prev").addEventListener("click", function () { step(-1); });
+  document.getElementById("next").addEventListener("click", function () { step(1); });
+  overlay.addEventListener("click", function (e) { if (e.target === overlay) closeSheet(false); });
+  window.addEventListener("popstate", function () { closeSheet(true); });
+  document.addEventListener("keydown", function (e) {
+    if (overlay.hidden) return;
+    if (e.key === "Escape") closeSheet(false);
+    else if (e.key === "ArrowLeft") step(-1);
+    else if (e.key === "ArrowRight") step(1);
+    else if (e.key === "Tab") {
+      var f = overlay.querySelectorAll("button");
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     }
-  }
+  });
+  // Scorrimento laterale su telefono
+  var sx = null, sy = null;
+  overlay.addEventListener("touchstart", function (e) { sx = e.touches[0].clientX; sy = e.touches[0].clientY; }, { passive: true });
+  overlay.addEventListener("touchend", function (e) {
+    if (sx === null) return;
+    var dx = e.changedTouches[0].clientX - sx, dy = e.changedTouches[0].clientY - sy;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1);
+    sx = sy = null;
+  }, { passive: true });
 
+  // Lingua
   function applyLang() {
     document.documentElement.lang = lang;
-    Array.prototype.forEach.call(document.querySelectorAll("[data-i18n]"), function (el) {
-      el.textContent = t(el.getAttribute("data-i18n"));
-    });
-    Array.prototype.forEach.call(document.querySelectorAll("[data-i18n-ph]"), function (el) {
-      el.setAttribute("placeholder", t(el.getAttribute("data-i18n-ph")));
-    });
-    Array.prototype.forEach.call(document.querySelectorAll(".lang button"), function (b) {
-      b.setAttribute("aria-pressed", b.getAttribute("data-lang") === lang ? "true" : "false");
-    });
-    opt0.textContent = t("pickme");
-    renderProgress();
-    renderRoster();
-    renderSheetHead();
-    updateVoteReadout();
-    if (!sending) showAlreadyHint();
+    document.querySelectorAll("[data-i18n]").forEach(function (el) { el.textContent = T[lang][el.getAttribute("data-i18n")]; });
+    document.querySelectorAll(".lang button").forEach(function (b) { b.setAttribute("aria-pressed", String(b.getAttribute("data-lang") === lang)); });
+    P.forEach(function (p, i) { labelCard(i); });
+    if (!overlay.hidden) fill();
   }
-
-  Array.prototype.forEach.call(document.querySelectorAll(".lang button"), function (b) {
-    b.addEventListener("click", function () {
-      lang = b.getAttribute("data-lang");
-      try { localStorage.setItem("pagelle-lang", lang); } catch (e) {}
-      applyLang();
-    });
-  });
-
-  meSel.addEventListener("change", function () {
-    me = meSel.value;
-    try { localStorage.setItem("pagelle-me", me); } catch (e) {}
-    renderProgress(); renderRoster(); renderSheetHead();
-  });
-
-  $("voto").addEventListener("input", updateVoteReadout);
-  $("campo").addEventListener("input", function () { $("campoN").textContent = String($("campo").value.length); });
-
-  $("form").addEventListener("submit", function (ev) {
-    ev.preventDefault();
-    if (sending) return;
-    if (!me) { setStatus(t("needName"), "err"); meSel.focus(); return; }
-    var campo = $("campo").value.trim();
-    if (!campo) { setStatus(t("needCampo"), "err"); $("campo").focus(); return; }
-
-    var p = selPerson();
-    var v = parseFloat($("voto").value);
-    var body = new URLSearchParams();
-    body.set(ENTRY.chi, p.name);
-    body.set(ENTRY.auto, p.key === meKey() ? "Sì" : "No");
-    body.set(ENTRY.voto, voteValue(v));
-    body.set(ENTRY.campo, campo);
-    var tallone = $("tallone").value.trim();
-    if (tallone) body.set(ENTRY.tallone, tallone);
-    body.set("fvv", "1");
-    body.set("pageHistory", "0");
-
-    sending = true;
-    $("save").disabled = true;
-    setStatus(t("sending"));
-    fetch(FORM_URL, { method: "POST", mode: "no-cors", body: body })
-      .then(function () {
-        done[p.key] = v;
-        try { localStorage.setItem("pagelle-done", JSON.stringify(done)); } catch (e) {}
-        renderProgress(); renderRoster();
-        setStatus(t("sent", { name: p.name }), "ok");
-        var idx = people.findIndex(function (q) { return q.key === p.key; });
-        var next = null;
-        for (var i = 1; i <= people.length; i++) {
-          var q = people[(idx + i) % people.length];
-          if (q.key !== meKey() && done[q.key] === undefined) { next = q; break; }
-        }
-        if (next) {
-          setTimeout(function () { select(next.key, false); setStatus(t("sentNext", { name: p.name, first: next.first }), "ok"); }, 800);
-        }
-      })
-      .catch(function () {
-        setStatus(t("fail"), "err");
-      })
-      .then(function () { sending = false; $("save").disabled = false; });
+  document.querySelectorAll(".lang button").forEach(function (b) {
+    b.addEventListener("click", function () { lang = b.getAttribute("data-lang"); save(KEY_LANG, lang); applyLang(); });
   });
 
   applyLang();
-  loadSheet();
+  count();
 })();
 </script>
 </body>
